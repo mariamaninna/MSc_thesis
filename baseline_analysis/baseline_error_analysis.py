@@ -1,10 +1,3 @@
-import pandas as pd
-import json
-from pathlib import Path
-
-import csv
-
-
 """
 Error analysis for the clembench transcripts.
 
@@ -21,7 +14,28 @@ events back).
 The reasons for abort were manually collected from the games source code (master.py, 
 log_to_self function). 
 
+interactions file structure for every clemgame episode:
+{ "meta"  : {...},
+  "player_models" : {...},
+  "players"       : { ... },
+  "turns" : a list of lists
+            [ each list is one round, each dict
+              inside a list is one event; an event
+              always has the following fields: 
+                            "from": "..."
+                            "to": "...",
+                            "timestamp": "...",
+                            "action": { "type": "...", "content": "..." }
+            ]
+}
 """
+
+import pandas as pd
+import json
+from pathlib import Path
+
+import csv
+
 
 root = Path(r"C:\Users\white\Desktop\MSc_thesis\results_baseline")
 instance_counts = {}

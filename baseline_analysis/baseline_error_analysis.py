@@ -31,13 +31,16 @@ interactions file structure for every clemgame episode:
 """
 
 import pandas as pd
+import numpy as np
 import json
 from pathlib import Path
-
 import csv
+import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
+from clemcore.clemeval import save_clem_table
 
 
-root = Path(r"C:\Users\white\Desktop\MSc_thesis\results_baseline")
+root = Path(r"C:\Users\white\Desktop\MSc_thesis\baseline_runs")
 instance_counts = {}
 
 #turns = interactions['turns']
@@ -50,6 +53,21 @@ CAUSES = ["turn_limit_reached", "invalid_format",
       "invalid format", "error",
       "invalid content", "abort game", "aborted",
       "metadata", "turns_limit"]
+STATIC = ["bbh", "cladder", "ifeval", "mmlu_pro", "eqbench"]
+
+
+# === GATHERING GAME OUTCOMES ===
+
+def subsample_static(root_dir):
+    """
+    The static benchmark scores need to be analyzed separately from the game scores.
+    """
+    raw_table = pd.read_csv(Path(root_dir) / "raw.csv", index_col=0)
+    is_static = raw_table["game"].isin(STATIC)
+    static_rows = raw_table[is_static == True]
+    game_rows = raw_table[is_static == False]
+    save_clem_table(static_rows, "baseline_analysis/static")
+    save_clem_table(game_rows, "baseline_analysis/games")
 
 def count_instances(root_dir):
   print("Instance counts --- for reference:")
@@ -64,15 +82,16 @@ def count_instances(root_dir):
 
 
 # Uncomment this block to rewrite instance_counts.csv
-  # with open("instance_counts.csv", "w", newline="", encoding="utf-8") as f:
-  #    w = csv.writer(f)
-  #    w.writerow(["model", "n_instances"])
-  #    for model, n in instance_counts.items():
-  #        w.writerow([model, n])
+#   with open(r"C:\Users\white\Desktop\MSc_thesis\baseline_analysis\instance_counts.csv", "w", newline="", encoding="utf-8") as f:
+#      w = csv.writer(f)
+#      w.writerow(["model", "n_instances"])
+#      for model, n in instance_counts.items():
+#          w.writerow([model, n])
 
 
 def collect_aborts(root_dir):
-  rows = []
+  rows = []       #for the aborts.csv df
+  outcomes = []   #for general outcome count
 
   for scores_file in root_dir.rglob("scores.json"):    
         instance_dir = scores_file.parent              
@@ -111,23 +130,158 @@ def collect_aborts(root_dir):
                   "detail": str(detail)[:200],
                   "n_rounds": len(turns),
                   "tail": json.dumps(tail, ensure_ascii=False),
+                  "group": "static" if game in STATIC else "games"
                   })
                   break
           else:
             rows.append({"model": model, "game": game,
                   "experiment": experiment,
                   "instance": instance, "cause_type": "UNMATCHED",
-                    "detail": "", "n_rounds": len(turns), "tail": json.dumps(tail, ensure_ascii=False)})
+                    "detail": "", "n_rounds": len(turns), 
+                    "group": "static" if game in STATIC else "games",
+                    "tail": json.dumps(tail, ensure_ascii=False)})
         elif ep["Success"]:
           outcome = "Success"
         else:
           outcome = "Lose"
-  return rows
-    
+        outcomes.append({"model": model, "game": game,      
+                           "experiment": experiment,
+                           "instance": instance,
+                           "group": "static" if game in STATIC else "games",
+                           "outcome": outcome})
+  return rows, outcomes
+
+# === PLOTTING ===
+
+def plot_outcomes(df, title, out_stem):
+        OUTCOME_COLORS = {"Success": "#60d169", "Lose": "#74787f", "Aborted": "#c14f4d"}
+        ORDER = ["Success", "Lose", "Aborted"]
+
+        ct = pd.crosstab(df.model, df.outcome).reindex(columns=ORDER, fill_value=0)
+        pct = ct.div(ct.sum(axis=1), axis=0) * 100
+
+        fig, ax = plt.subplots(figsize=(8, 2.6))
+        left = pd.Series(0.0, index=pct.index)
+        for oc in ORDER:
+            ax.barh(pct.index, pct[oc], left=left, color=OUTCOME_COLORS[oc],
+                    label=oc, height=0.62, edgecolor="#fcfcfb", linewidth=2)
+            for m in pct.index:                                  
+                if pct.loc[m, oc] > 6:
+                    ax.text(left[m] + pct.loc[m, oc] / 2, m, f"{pct.loc[m, oc]:.0f}%",
+                            ha="center", va="center", color="black", fontsize=9)
+            left += pct[oc]
+
+        ax.set_xlim(0, 100)
+        ax.legend(frameon=False, ncol=3, loc="lower center", bbox_to_anchor=(0.5, -0.45))
+        ax.set_title(title, loc="left", pad=12)
+        fig.tight_layout()
+        fig.savefig(out_stem + ".png", bbox_inches="tight", dpi = 300)
+        fig.savefig(out_stem + ".pdf", bbox_inches="tight")
+
+
+
+def plot_causes_by_game_model(df_aborts, df_outcomes, out_path):
+
+        CATEGORY = {"turn_limit_reached": "turn limit", "turns_limit": "turn limit",
+            "invalid_format": "format", "invalid format": "format", "aborted": "format",
+            "validation error": "rule", "invalid content": "rule", "error": "rule"}
+        CAT_ORDER  = ["format", "rule"]
+        CAT_COLORS = {"format": "#2a78d6", "rule": "#eb6834"}
+        GAME_GROUPS = {
+      "word games":        ["taboo", "wordle", "wordle_withclue", "wordle_withcritic", "wordle_noexp", "wordle_withclue_noexp", "wordle_withcritic_noexp"],
+      "reference":         ["referencegame", "imagegame", "matchit_ascii"],
+      "navigation":        ["adventuregame", "textmapworld", "textmapworld_graphreasoning",
+                            "textmapworld_specificroom"],
+      "dialogue / social": ["codenames", "dond", "guesswhat", "privateshared"],
+  }
+        d = df_aborts.copy()
+
+        categories = []
+        for cause, detail in zip(d.cause_type, d.detail):
+            if cause != "validation error":
+                categories.append(CATEGORY.get(cause))
+                continue
+            text = str(detail)
+            if "rambling error" in text or "answer only contained one line" in text:
+                categories.append("format")
+            else:
+                categories.append("rule")
+        d["category"] = categories
+
+        all_games = sorted(df_outcomes.game.unique())
+        pooled = pd.crosstab(d.game, d.category).reindex(all_games, fill_value=0)
+        order = [g for grp in GAME_GROUPS.values() for g in grp][::-1]
+        models = sorted(d.model.unique())
+        xmax   = pd.crosstab([d.model, d.game], d.category).sum(axis=1).max() * 1.15
+
+        fig, axes = plt.subplots(1, len(models), figsize=(10, 5), sharey=True)
+        for ax, m in zip(axes, models):
+            ct = (pd.crosstab(d[d.model == m].game, d[d.model == m].category)
+                    .reindex(index=order, columns=CAT_ORDER, fill_value=0))
+            left = np.zeros(len(ct))
+            for c in CAT_ORDER:
+                ax.barh(ct.index, ct[c], left=left, color=CAT_COLORS[c], label=c,
+                        height=0.7, edgecolor="#fcfcfb", linewidth=1.2)
+                left += ct[c].values
+            ax.set_xlim(0, xmax)
+            ax.set_title(m, loc="left", fontsize=9)
+            ax.set_xlabel("aborted episodes")
+            ax.tick_params(labelsize=8)
+
+        handles, labels = axes[0].get_legend_handles_labels()
+        fig.legend(handles, labels, frameon=False, ncol=3,
+                loc="lower center", bbox_to_anchor=(0.5, -0.02))
+        fig.suptitle("", x=0.02, ha="left")                              #abort causes by game and model
+        fig.tight_layout(); fig.savefig(out_path, bbox_inches="tight")
+
+
+
+
 def main():
+
+    OUT = Path(r"C:\Users\white\Desktop\MSc_thesis\baseline_analysis")
+    IMG = OUT / "images"
+    IMG.mkdir(parents=True, exist_ok=True)
+
+    subsample_static(root)
     count_instances(root)
-    rows = collect_aborts(root)
-    pd.DataFrame(rows).to_csv("aborts.csv", index=False, encoding="utf-8")
+    rows, outcomes = collect_aborts(root)
+
+    df = pd.DataFrame(outcomes)
+    df_aborts = pd.DataFrame(rows)
+    df.to_csv(OUT / "outcomes.csv", index=False, encoding="utf-8")
+    df_aborts.to_csv(OUT / "aborts.csv", index=False, encoding="utf-8")
+
+    games_df = df[df.group == "games"]
+    static_df = df[df.group == "static"]
+    n_games = games_df.groupby("model").size().iloc[0]      # Caution: need to verify if all instance counts per model are equal!
+    n_static  = static_df.groupby("model").size().iloc[0]   # (e.g. by rewriting instance_counts.csv)
+
+    print("Total game episodes: ", n_games)
+    print("Total static episodes: ", n_static)
+
+    plt.rcParams.update({
+      "font.family": "serif",
+      "font.serif": ["Palatino Linotype", "Book Antiqua", "DejaVu Serif"],
+      "font.size": 10,
+      "mathtext.fontset": "custom",          
+      "mathtext.rm": "Palatino Linotype",
+      "mathtext.it": "Palatino Linotype:italic",
+                        })
+    plot_outcomes(df[df.group == "games"],
+                    "",
+                    str(IMG / "figure_general_outcomes"))
+
+    plot_outcomes(df[df.group == "static"],
+                    "",
+                    str(IMG / "figure_general_outcomes_static"))
+
+    plot_causes_by_game_model(df_aborts[df_aborts.group == "games"],
+                                df[df.group == "games"],
+                                str(IMG / "fig_causes_by_game_model.pdf"))
+
+
+        
 
 if __name__ == "__main__":
     main()          

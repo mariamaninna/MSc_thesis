@@ -32,6 +32,7 @@ interactions file structure for every clemgame episode:
 
 import pandas as pd
 import numpy as np
+import re
 import json
 from pathlib import Path
 import csv
@@ -54,6 +55,7 @@ CAUSES = ["turn_limit_reached", "invalid_format",
       "invalid content", "abort game", "aborted",
       "metadata", "turns_limit"]
 STATIC = ["bbh", "cladder", "ifeval", "mmlu_pro", "eqbench"]
+GENERIC = {"abort game", "game_result = abort", "continue", "end game"}
 
 
 # === GATHERING GAME OUTCOMES ===
@@ -115,7 +117,18 @@ def collect_aborts(root_dir):
             a = e["action"]
             tail.append({"from": e["from"], "to": e["to"],
                     "type": a["type"], "content": str(a["content"])[:300]})
-        
+
+          gm_reason = ""
+          for e in flat[-5:]:                                  # oldest -> newest
+            a = e["action"]
+            content = str(a["content"]).strip()
+            if not content or content.lower() in GENERIC:
+                continue                                      # skip the content-free markers
+            if a["type"] == "metadata" and not content.startswith("Error:"):
+                continue                                      # skip wordle's turn-stats lines
+            if a["type"] in CAUSES:
+                gm_reason = content[:300]        
+
           for e in reversed(flat[-5:]):        # newest event gets written down first
               if e["action"]["type"] in CAUSES:
                   reason = e["action"]
@@ -127,6 +140,7 @@ def collect_aborts(root_dir):
                   "experiment": experiment,
                   "instance": instance,
                   "cause_type": reason["type"],
+                  "gm_reason": gm_reason,
                   "detail": str(detail)[:200],
                   "n_rounds": len(turns),
                   "tail": json.dumps(tail, ensure_ascii=False),
@@ -178,13 +192,30 @@ def plot_outcomes(df, title, out_stem):
         fig.savefig(out_stem + ".png", bbox_inches="tight", dpi = 300)
         fig.savefig(out_stem + ".pdf", bbox_inches="tight")
 
+def canonical_reason(s):
+    """
+    For codenames, which writes an abort reason as dictionary (in all other games, it's a string),
+    and wordle, which always puts a prefix "Error:", we need some additional parsing.
+    """
+    s = str(s).strip()
+    if not s or s == "nan":
+        return "(not logged)"
+    m = re.search(r"'type':\s*'([^']*)'", s)        
+    if m:
+        return m.group(1)
+    if s.startswith("Error:"):                       
+        return s[len("Error:"):].strip()
+    return s
 
 
 def plot_causes_by_game_model(df_aborts, df_outcomes, out_path):
 
-        CATEGORY = {"turn_limit_reached": "turn limit", "turns_limit": "turn limit",
-            "invalid_format": "format", "invalid format": "format", "aborted": "format",
-            "validation error": "rule", "invalid content": "rule", "error": "rule"}
+        FORMAT = {"The response should contain the 'guess:' keyword exactly once.",
+            "The guess should be a single word and should only contain letters.",
+            "Invalid grid format","Abort: invalid format in probing.",
+            'proposal does not start with "proposal:"',"rambling error",
+            "proposal does not include number/name pairs", "clue contains spaces",
+            "target appears more than once in utterance","guess appears more than once in utterance"     }
         CAT_ORDER  = ["format", "rule"]
         CAT_COLORS = {"format": "#2a78d6", "rule": "#eb6834"}
         GAME_GROUPS = {
@@ -196,17 +227,10 @@ def plot_causes_by_game_model(df_aborts, df_outcomes, out_path):
   }
         d = df_aborts.copy()
 
-        categories = []
-        for cause, detail in zip(d.cause_type, d.detail):
-            if cause != "validation error":
-                categories.append(CATEGORY.get(cause))
-                continue
-            text = str(detail)
-            if "rambling error" in text or "answer only contained one line" in text:
-                categories.append("format")
-            else:
-                categories.append("rule")
-        d["category"] = categories
+        d["reason"] = [canonical_reason(x) for x in d.gm_reason]
+        # this is very hardcoded, but I see no other way to do this because loggers write
+        # the reasons why the game aborted a bit differently
+        d["category"] = ["format" if r in FORMAT else None if r == "(not logged)" else "rule" for r in d["reason"]]
 
         all_games = sorted(df_outcomes.game.unique())
         pooled = pd.crosstab(d.game, d.category).reindex(all_games, fill_value=0)

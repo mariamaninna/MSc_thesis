@@ -216,8 +216,8 @@ def plot_causes_by_game_model(df_aborts, df_outcomes, out_path):
             'proposal does not start with "proposal:"',"rambling error",
             "proposal does not include number/name pairs", "clue contains spaces",
             "target appears more than once in utterance","guess appears more than once in utterance"     }
-        CAT_ORDER  = ["format", "rule"]
-        CAT_COLORS = {"format": "#2a78d6", "rule": "#eb6834"}
+        CAT_ORDER  = ["format", "rule", "unclassified"]
+        CAT_COLORS = {"format": "#2a78d6", "rule": "#eb6834", "unclassified": "#b9bcc2"}
         GAME_GROUPS = {
       "word games":        ["taboo", "wordle", "wordle_withclue", "wordle_withcritic", "wordle_noexp", "wordle_withclue_noexp", "wordle_withcritic_noexp"],
       "reference":         ["referencegame", "imagegame", "matchit_ascii"],
@@ -230,7 +230,7 @@ def plot_causes_by_game_model(df_aborts, df_outcomes, out_path):
         d["reason"] = [canonical_reason(x) for x in d.gm_reason]
         # this is very hardcoded, but I see no other way to do this because loggers write
         # the reasons why the game aborted a bit differently
-        d["category"] = ["format" if r in FORMAT else None if r == "(not logged)" else "rule" for r in d["reason"]]
+        d["category"] = ["format" if r in FORMAT else "unclassified" if r == "(not logged)" else "rule" for r in d["reason"]]
 
         all_games = sorted(df_outcomes.game.unique())
         pooled = pd.crosstab(d.game, d.category).reindex(all_games, fill_value=0)

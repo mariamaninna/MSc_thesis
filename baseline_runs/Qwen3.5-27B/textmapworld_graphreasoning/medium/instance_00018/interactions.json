@@ -1,0 +1,1072 @@
+{
+  "meta": {
+    "game_name": "textmapworld_graphreasoning",
+    "experiment_name": "medium",
+    "game_id": 18,
+    "results_folder": "Qwen3.5-27B",
+    "clem_version": "3.7.2",
+    "round_count": 12,
+    "completed": true
+  },
+  "player_models": {
+    "0": {
+      "model_spec": {
+        "model_name": "Qwen3.5-27B",
+        "backend": "huggingface_local",
+        "context_size": "262k",
+        "huggingface_id": "Qwen/Qwen3.5-27B",
+        "languages": [
+          "en",
+          "zh"
+        ],
+        "license": {
+          "name": "Apache 2.0",
+          "url": "https://www.apache.org/licenses/LICENSE-2.0"
+        },
+        "lookup_source": "/project/mmanina/MSc_thesis/libs/playpen/model_registry.json",
+        "model_config": {
+          "premade_chat_template": true,
+          "eos_to_cull": "<\\|im_end\\|>|<\\|endoftext\\|>",
+          "chat_template_kwargs": {
+            "enable_thinking": false
+          },
+          "multimodality": {
+            "single_image": true,
+            "multiple_images": true,
+            "audio": false,
+            "video": true
+          }
+        },
+        "open_weight": true,
+        "parameters": "27B",
+        "release_date": "2026-02-24"
+      },
+      "gen_args": {
+        "temperature": 0.0,
+        "max_tokens": 600
+      }
+    }
+  },
+  "players": {
+    "GM": {
+      "game_role": "Game Master",
+      "model_name": "programmatic"
+    },
+    "Player 1": {
+      "game_role": "PathGuesser",
+      "model_name": "Qwen3.5-27B"
+    },
+    "Player 2": {
+      "game_role": "PathDescriber",
+      "model_name": "programmatic"
+    }
+  },
+  "turns": [
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T04:45:53.389019",
+        "action": {
+          "type": "send message",
+          "content": "Please help me with the following task. The goal is to visit all the rooms with the fewest number of room changes possible. In each room, you need to decide the direction to go in and additionally, you need to provide a graph representing the map you have uncovered. Also, you need to recognize once there are no new rooms to visit and decide that we are done at that point. Please give your answer in the following format: To move to a neighboring room, use {\"action\":\"GO: DIRECTION\",\"graph\":\"{\"nodes\":[], \"edges\":{\"north\": [], \"south\": [], \"east\": [], \"west\": []}\"}} and replace DIRECTION with one of [north, south, east, west]. To stop the exploration, answer with \"DONE\" instead. Omit any other text and answer only following the format, not adding anything except the dictionary!\nHere is an example: \nYou are in the Living Room. Currently available directions: south, west. What is your next instruction?\n{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}\nYou have made a step and entered a Library. Currently available directions: east, north. What is your next instruction?\n{\"action\":\"GO: north\", \"graph\":{\"nodes\":[\"Living Room\", \"Library\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[(\"Living Room\", \"Library\")]}}}\nYou have made a step and entered a Kitchen. Currently available directions: south, east. What is your next instruction?\n{\"action\":\"GO: east\", \"graph\":{\"nodes\": [\"Living Room\", \"Library\", \"Kitchen\"], \"edges\":{\"north\": [(\"Library\", \"Kitchen\")],\"south\": [],\"east\": [],\"west\": [(\"Living Room\", \"Library\")]}}}\n...\nYou have made a step and entered a Bedroom. Currently available directions: south, west. What is your next instruction?\n{\"action\": \"DONE\", \"graph\": {...}}\nLet us start.\nYou are in the Sauna. Currently available directions: east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:45:53.389036",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: east\",\"graph\":{\"nodes\":[\"Sauna\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:45:53.389104",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:45:53.389128",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: east\",\"graph\":{\"nodes\":[\"Sauna\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-28T04:46:13.649657",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: east\",\"graph\":{\"nodes\":[\"Sauna\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:46:13.649672",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Gallery. Currently available directions: south, west, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:46:13.649687",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:46:13.649713",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Sauna\", \"new\": \"Gallery\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:46:13.649728",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Sauna'], 'edges': {'north': [], 'south': [], 'east': [], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T04:47:06.995581",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Gallery. Currently available directions: south, west, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:47:06.995598",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[[\"Sauna\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:47:06.995668",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:47:06.995692",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[[\"Sauna\",\"Gallery\"]],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-28T04:47:33.855552",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[[\"Sauna\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:47:33.855567",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Exercise room. Currently available directions: north. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:47:33.855582",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:47:33.855607",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Gallery\", \"new\": \"Exercise room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:47:33.855624",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Sauna', 'Gallery'], 'edges': {'north': [], 'south': [], 'east': [['Sauna', 'Gallery']], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T04:48:37.935761",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Exercise room. Currently available directions: north. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:48:37.935778",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: north\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"]],\"south\":[],\"east\":[[\"Sauna\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:48:37.935866",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:48:37.935891",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: north\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"]],\"south\":[],\"east\":[[\"Sauna\",\"Gallery\"]],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-28T04:49:10.954377",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: north\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"]],\"south\":[],\"east\":[[\"Sauna\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:49:10.954391",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Gallery. Currently available directions: south, west, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:49:10.954407",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:49:10.954433",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Exercise room\", \"new\": \"Gallery\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:49:10.954451",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Sauna', 'Gallery', 'Exercise room'], 'edges': {'north': [['Exercise room', 'Gallery']], 'south': [], 'east': [['Sauna', 'Gallery']], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T04:50:25.236877",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Gallery. Currently available directions: south, west, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:50:25.236895",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: west\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"]],\"south\":[],\"east\":[[\"Sauna\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:50:25.236967",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:50:25.236992",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: west\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"]],\"south\":[],\"east\":[[\"Sauna\",\"Gallery\"]],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-28T04:51:02.841599",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: west\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"]],\"south\":[],\"east\":[[\"Sauna\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:51:02.841614",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Sauna. Currently available directions: east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:51:02.841630",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:51:02.841656",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Gallery\", \"new\": \"Sauna\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:51:02.841674",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Sauna', 'Gallery', 'Exercise room'], 'edges': {'north': [['Exercise room', 'Gallery']], 'south': [], 'east': [['Sauna', 'Gallery']], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T04:52:21.594250",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Sauna. Currently available directions: east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:52:21.594265",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: east\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"]],\"south\":[],\"east\":[[\"Sauna\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:52:21.594336",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:52:21.594361",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: east\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"]],\"south\":[],\"east\":[[\"Sauna\",\"Gallery\"]],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-28T04:53:05.908366",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: east\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"]],\"south\":[],\"east\":[[\"Sauna\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:53:05.908381",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Gallery. Currently available directions: south, west, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:53:05.908397",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:53:05.908423",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Sauna\", \"new\": \"Gallery\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:53:05.908441",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Sauna', 'Gallery', 'Exercise room'], 'edges': {'north': [['Exercise room', 'Gallery']], 'south': [], 'east': [['Sauna', 'Gallery']], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T04:54:16.364441",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Gallery. Currently available directions: south, west, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:54:16.364458",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: east\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"]],\"south\":[],\"east\":[[\"Sauna\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:54:16.364545",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:54:16.364571",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: east\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"]],\"south\":[],\"east\":[[\"Sauna\",\"Gallery\"]],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-28T04:55:05.841013",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: east\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"]],\"south\":[],\"east\":[[\"Sauna\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:55:05.841028",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Media room. Currently available directions: south, west. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:55:05.841044",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:55:05.841070",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Gallery\", \"new\": \"Media room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:55:05.841088",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Sauna', 'Gallery', 'Exercise room'], 'edges': {'north': [['Exercise room', 'Gallery']], 'south': [], 'east': [['Sauna', 'Gallery']], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T04:56:22.183409",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Media room. Currently available directions: south, west. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:56:22.183424",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\",\"Media room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"]],\"south\":[[\"Media room\",\"Gallery\"]],\"east\":[[\"Sauna\",\"Gallery\"],[\"Gallery\",\"Media room\"]],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:56:22.183496",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:56:22.183523",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\",\"Media room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"]],\"south\":[[\"Media room\",\"Gallery\"]],\"east\":[[\"Sauna\",\"Gallery\"],[\"Gallery\",\"Media room\"]],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-28T04:57:13.844836",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\",\"Media room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"]],\"south\":[[\"Media room\",\"Gallery\"]],\"east\":[[\"Sauna\",\"Gallery\"],[\"Gallery\",\"Media room\"]],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:57:13.844850",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Attic. Currently available directions: north, south. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:57:13.844867",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:57:13.844894",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Media room\", \"new\": \"Attic\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:57:13.844913",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Sauna', 'Gallery', 'Exercise room', 'Media room'], 'edges': {'north': [['Exercise room', 'Gallery']], 'south': [['Media room', 'Gallery']], 'east': [['Sauna', 'Gallery'], ['Gallery', 'Media room']], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T04:58:05.076567",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Attic. Currently available directions: north, south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:58:05.076584",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\",\"Media room\",\"Attic\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"]],\"south\":[[\"Media room\",\"Gallery\"],[\"Attic\",\"Media room\"]],\"east\":[[\"Sauna\",\"Gallery\"],[\"Gallery\",\"Media room\"]],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:58:05.076678",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:58:05.076707",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\",\"Media room\",\"Attic\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"]],\"south\":[[\"Media room\",\"Gallery\"],[\"Attic\",\"Media room\"]],\"east\":[[\"Sauna\",\"Gallery\"],[\"Gallery\",\"Media room\"]],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-28T04:59:02.726169",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\",\"Media room\",\"Attic\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"]],\"south\":[[\"Media room\",\"Gallery\"],[\"Attic\",\"Media room\"]],\"east\":[[\"Sauna\",\"Gallery\"],[\"Gallery\",\"Media room\"]],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:59:02.726184",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Game room. Currently available directions: north. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:59:02.726200",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:59:02.726223",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Attic\", \"new\": \"Game room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:59:02.726243",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Sauna', 'Gallery', 'Exercise room', 'Media room', 'Attic'], 'edges': {'north': [['Exercise room', 'Gallery']], 'south': [['Media room', 'Gallery'], ['Attic', 'Media room']], 'east': [['Sauna', 'Gallery'], ['Gallery', 'Media room']], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T04:59:49.451209",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Game room. Currently available directions: north. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:59:49.451228",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: north\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\",\"Media room\",\"Attic\",\"Game room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"],[\"Game room\",\"Attic\"]],\"south\":[[\"Media room\",\"Gallery\"],[\"Attic\",\"Media room\"]],\"east\":[[\"Sauna\",\"Gallery\"],[\"Gallery\",\"Media room\"]],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:59:49.451269",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:59:49.451295",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: north\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\",\"Media room\",\"Attic\",\"Game room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"],[\"Game room\",\"Attic\"]],\"south\":[[\"Media room\",\"Gallery\"],[\"Attic\",\"Media room\"]],\"east\":[[\"Sauna\",\"Gallery\"],[\"Gallery\",\"Media room\"]],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-28T05:00:40.244570",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: north\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\",\"Media room\",\"Attic\",\"Game room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"],[\"Game room\",\"Attic\"]],\"south\":[[\"Media room\",\"Gallery\"],[\"Attic\",\"Media room\"]],\"east\":[[\"Sauna\",\"Gallery\"],[\"Gallery\",\"Media room\"]],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:00:40.244588",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Attic. Currently available directions: north, south. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:00:40.244604",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:00:40.244628",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Game room\", \"new\": \"Attic\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:00:40.244647",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Sauna', 'Gallery', 'Exercise room', 'Media room', 'Attic', 'Game room'], 'edges': {'north': [['Exercise room', 'Gallery'], ['Game room', 'Attic']], 'south': [['Media room', 'Gallery'], ['Attic', 'Media room']], 'east': [['Sauna', 'Gallery'], ['Gallery', 'Media room']], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T05:01:06.015860",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Attic. Currently available directions: north, south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:01:06.015880",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: north\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\",\"Media room\",\"Attic\",\"Game room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"],[\"Game room\",\"Attic\"]],\"south\":[[\"Media room\",\"Gallery\"],[\"Attic\",\"Media room\"]],\"east\":[[\"Sauna\",\"Gallery\"],[\"Gallery\",\"Media room\"]],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:01:06.015919",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:01:06.015945",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: north\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\",\"Media room\",\"Attic\",\"Game room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"],[\"Game room\",\"Attic\"]],\"south\":[[\"Media room\",\"Gallery\"],[\"Attic\",\"Media room\"]],\"east\":[[\"Sauna\",\"Gallery\"],[\"Gallery\",\"Media room\"]],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-28T05:01:57.340851",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: north\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\",\"Media room\",\"Attic\",\"Game room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"],[\"Game room\",\"Attic\"]],\"south\":[[\"Media room\",\"Gallery\"],[\"Attic\",\"Media room\"]],\"east\":[[\"Sauna\",\"Gallery\"],[\"Gallery\",\"Media room\"]],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:01:57.340868",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Media room. Currently available directions: south, west. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:01:57.340885",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:01:57.340909",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Attic\", \"new\": \"Media room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:01:57.340929",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Sauna', 'Gallery', 'Exercise room', 'Media room', 'Attic', 'Game room'], 'edges': {'north': [['Exercise room', 'Gallery'], ['Game room', 'Attic']], 'south': [['Media room', 'Gallery'], ['Attic', 'Media room']], 'east': [['Sauna', 'Gallery'], ['Gallery', 'Media room']], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T05:02:22.931186",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Media room. Currently available directions: south, west. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:02:22.931209",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: west\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\",\"Media room\",\"Attic\",\"Game room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"],[\"Game room\",\"Attic\"]],\"south\":[[\"Media room\",\"Gallery\"],[\"Attic\",\"Media room\"]],\"east\":[[\"Sauna\",\"Gallery\"],[\"Gallery\",\"Media room\"]],\"west\":[[\"Media room\",\"Gallery\"]]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:02:22.931246",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:02:22.931278",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: west\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\",\"Media room\",\"Attic\",\"Game room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"],[\"Game room\",\"Attic\"]],\"south\":[[\"Media room\",\"Gallery\"],[\"Attic\",\"Media room\"]],\"east\":[[\"Sauna\",\"Gallery\"],[\"Gallery\",\"Media room\"]],\"west\":[[\"Media room\",\"Gallery\"]]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-28T05:03:17.191530",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: west\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\",\"Media room\",\"Attic\",\"Game room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"],[\"Game room\",\"Attic\"]],\"south\":[[\"Media room\",\"Gallery\"],[\"Attic\",\"Media room\"]],\"east\":[[\"Sauna\",\"Gallery\"],[\"Gallery\",\"Media room\"]],\"west\":[[\"Media room\",\"Gallery\"]]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:03:17.191548",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Gallery. Currently available directions: south, west, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:03:17.191564",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:03:17.191589",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Media room\", \"new\": \"Gallery\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:03:17.191611",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Sauna', 'Gallery', 'Exercise room', 'Media room', 'Attic', 'Game room'], 'edges': {'north': [['Exercise room', 'Gallery'], ['Game room', 'Attic']], 'south': [['Media room', 'Gallery'], ['Attic', 'Media room']], 'east': [['Sauna', 'Gallery'], ['Gallery', 'Media room']], 'west': [['Media room', 'Gallery']]}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T05:03:28.090946",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Gallery. Currently available directions: south, west, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:03:28.090971",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"DONE\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\",\"Media room\",\"Attic\",\"Game room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"],[\"Game room\",\"Attic\"]],\"south\":[[\"Media room\",\"Gallery\"],[\"Attic\",\"Media room\"]],\"east\":[[\"Sauna\",\"Gallery\"],[\"Gallery\",\"Media room\"]],\"west\":[[\"Media room\",\"Gallery\"]]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:03:28.091007",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:03:28.091037",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"DONE\",\"graph\":{\"nodes\":[\"Sauna\",\"Gallery\",\"Exercise room\",\"Media room\",\"Attic\",\"Game room\"],\"edges\":{\"north\":[[\"Exercise room\",\"Gallery\"],[\"Game room\",\"Attic\"]],\"south\":[[\"Media room\",\"Gallery\"],[\"Attic\",\"Media room\"]],\"east\":[[\"Sauna\",\"Gallery\"],[\"Gallery\",\"Media room\"]],\"west\":[[\"Media room\",\"Gallery\"]]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T05:03:28.091149",
+        "action": {
+          "type": "stop",
+          "content": "The guesser decided to stop the game"
+        }
+      }
+    ]
+  ]
+}

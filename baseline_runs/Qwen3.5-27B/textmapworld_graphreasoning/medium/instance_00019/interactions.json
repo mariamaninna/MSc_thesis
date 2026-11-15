@@ -1,0 +1,724 @@
+{
+  "meta": {
+    "game_name": "textmapworld_graphreasoning",
+    "experiment_name": "medium",
+    "game_id": 19,
+    "results_folder": "Qwen3.5-27B",
+    "clem_version": "3.7.2",
+    "round_count": 8,
+    "completed": true
+  },
+  "player_models": {
+    "0": {
+      "model_spec": {
+        "model_name": "Qwen3.5-27B",
+        "backend": "huggingface_local",
+        "context_size": "262k",
+        "huggingface_id": "Qwen/Qwen3.5-27B",
+        "languages": [
+          "en",
+          "zh"
+        ],
+        "license": {
+          "name": "Apache 2.0",
+          "url": "https://www.apache.org/licenses/LICENSE-2.0"
+        },
+        "lookup_source": "/project/mmanina/MSc_thesis/libs/playpen/model_registry.json",
+        "model_config": {
+          "premade_chat_template": true,
+          "eos_to_cull": "<\\|im_end\\|>|<\\|endoftext\\|>",
+          "chat_template_kwargs": {
+            "enable_thinking": false
+          },
+          "multimodality": {
+            "single_image": true,
+            "multiple_images": true,
+            "audio": false,
+            "video": true
+          }
+        },
+        "open_weight": true,
+        "parameters": "27B",
+        "release_date": "2026-02-24"
+      },
+      "gen_args": {
+        "temperature": 0.0,
+        "max_tokens": 600
+      }
+    }
+  },
+  "players": {
+    "GM": {
+      "game_role": "Game Master",
+      "model_name": "programmatic"
+    },
+    "Player 1": {
+      "game_role": "PathGuesser",
+      "model_name": "Qwen3.5-27B"
+    },
+    "Player 2": {
+      "game_role": "PathDescriber",
+      "model_name": "programmatic"
+    }
+  },
+  "turns": [
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T04:45:53.389415",
+        "action": {
+          "type": "send message",
+          "content": "Please help me with the following task. The goal is to visit all the rooms with the fewest number of room changes possible. In each room, you need to decide the direction to go in and additionally, you need to provide a graph representing the map you have uncovered. Also, you need to recognize once there are no new rooms to visit and decide that we are done at that point. Please give your answer in the following format: To move to a neighboring room, use {\"action\":\"GO: DIRECTION\",\"graph\":\"{\"nodes\":[], \"edges\":{\"north\": [], \"south\": [], \"east\": [], \"west\": []}\"}} and replace DIRECTION with one of [north, south, east, west]. To stop the exploration, answer with \"DONE\" instead. Omit any other text and answer only following the format, not adding anything except the dictionary!\nHere is an example: \nYou are in the Living Room. Currently available directions: south, west. What is your next instruction?\n{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}\nYou have made a step and entered a Library. Currently available directions: east, north. What is your next instruction?\n{\"action\":\"GO: north\", \"graph\":{\"nodes\":[\"Living Room\", \"Library\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[(\"Living Room\", \"Library\")]}}}\nYou have made a step and entered a Kitchen. Currently available directions: south, east. What is your next instruction?\n{\"action\":\"GO: east\", \"graph\":{\"nodes\": [\"Living Room\", \"Library\", \"Kitchen\"], \"edges\":{\"north\": [(\"Library\", \"Kitchen\")],\"south\": [],\"east\": [],\"west\": [(\"Living Room\", \"Library\")]}}}\n...\nYou have made a step and entered a Bedroom. Currently available directions: south, west. What is your next instruction?\n{\"action\": \"DONE\", \"graph\": {...}}\nLet us start.\nYou are in the Nursery. Currently available directions: west, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:45:53.389434",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: east\",\"graph\":{\"nodes\":[\"Nursery\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:45:53.389470",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:45:53.389492",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: east\",\"graph\":{\"nodes\":[\"Nursery\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-28T04:46:13.649762",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: east\",\"graph\":{\"nodes\":[\"Nursery\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:46:13.649777",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Craft room. Currently available directions: south, west, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:46:13.649792",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:46:13.649815",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Nursery\", \"new\": \"Craft room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:46:13.649830",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Nursery'], 'edges': {'north': [], 'south': [], 'east': [], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T04:47:06.995987",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Craft room. Currently available directions: south, west, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:47:06.996008",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: east\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[[\"Nursery\",\"Craft room\"]],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:47:06.996043",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:47:06.996067",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: east\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[[\"Nursery\",\"Craft room\"]],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-28T04:47:33.855657",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: east\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[[\"Nursery\",\"Craft room\"]],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:47:33.855672",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Gallery. Currently available directions: west. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:47:33.855689",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:47:33.855712",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Craft room\", \"new\": \"Gallery\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:47:33.855728",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Nursery', 'Craft room'], 'edges': {'north': [], 'south': [], 'east': [['Nursery', 'Craft room']], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T04:48:37.936242",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Gallery. Currently available directions: west. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:48:37.936261",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: west\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\",\"Gallery\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[[\"Nursery\",\"Craft room\"],[\"Craft room\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:48:37.936303",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:48:37.936326",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: west\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\",\"Gallery\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[[\"Nursery\",\"Craft room\"],[\"Craft room\",\"Gallery\"]],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-28T04:49:10.954484",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: west\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\",\"Gallery\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[[\"Nursery\",\"Craft room\"],[\"Craft room\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:49:10.954498",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Craft room. Currently available directions: south, west, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:49:10.954514",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:49:10.954539",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Gallery\", \"new\": \"Craft room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:49:10.954555",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Nursery', 'Craft room', 'Gallery'], 'edges': {'north': [], 'south': [], 'east': [['Nursery', 'Craft room'], ['Craft room', 'Gallery']], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T04:50:25.237299",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Craft room. Currently available directions: south, west, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:50:25.237319",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\",\"Gallery\"],\"edges\":{\"north\":[],\"south\":[[\"Craft room\",\"Nursery\"]],\"east\":[[\"Nursery\",\"Craft room\"],[\"Craft room\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:50:25.237356",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:50:25.237380",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\",\"Gallery\"],\"edges\":{\"north\":[],\"south\":[[\"Craft room\",\"Nursery\"]],\"east\":[[\"Nursery\",\"Craft room\"],[\"Craft room\",\"Gallery\"]],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-28T04:51:02.841708",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\",\"Gallery\"],\"edges\":{\"north\":[],\"south\":[[\"Craft room\",\"Nursery\"]],\"east\":[[\"Nursery\",\"Craft room\"],[\"Craft room\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:51:02.841723",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Playroom. Currently available directions: north, south. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:51:02.841738",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:51:02.841762",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Craft room\", \"new\": \"Playroom\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:51:02.841779",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Nursery', 'Craft room', 'Gallery'], 'edges': {'north': [], 'south': [['Craft room', 'Nursery']], 'east': [['Nursery', 'Craft room'], ['Craft room', 'Gallery']], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T04:52:21.594651",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Playroom. Currently available directions: north, south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:52:21.594669",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\",\"Gallery\",\"Playroom\"],\"edges\":{\"north\":[[\"Playroom\",\"Craft room\"]],\"south\":[],\"east\":[[\"Nursery\",\"Craft room\"],[\"Craft room\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:52:21.594707",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:52:21.594733",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\",\"Gallery\",\"Playroom\"],\"edges\":{\"north\":[[\"Playroom\",\"Craft room\"]],\"south\":[],\"east\":[[\"Nursery\",\"Craft room\"],[\"Craft room\",\"Gallery\"]],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-28T04:53:05.908475",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\",\"Gallery\",\"Playroom\"],\"edges\":{\"north\":[[\"Playroom\",\"Craft room\"]],\"south\":[],\"east\":[[\"Nursery\",\"Craft room\"],[\"Craft room\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:53:05.908490",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Balcony. Currently available directions: north. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:53:05.908506",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:53:05.908531",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Playroom\", \"new\": \"Balcony\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:53:05.908549",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Nursery', 'Craft room', 'Gallery', 'Playroom'], 'edges': {'north': [['Playroom', 'Craft room']], 'south': [], 'east': [['Nursery', 'Craft room'], ['Craft room', 'Gallery']], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T04:54:16.364919",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Balcony. Currently available directions: north. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:54:16.364939",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: north\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\",\"Gallery\",\"Playroom\",\"Balcony\"],\"edges\":{\"north\":[[\"Playroom\",\"Craft room\"],[\"Balcony\",\"Playroom\"]],\"south\":[],\"east\":[[\"Nursery\",\"Craft room\"],[\"Craft room\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:54:16.364982",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:54:16.365007",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: north\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\",\"Gallery\",\"Playroom\",\"Balcony\"],\"edges\":{\"north\":[[\"Playroom\",\"Craft room\"],[\"Balcony\",\"Playroom\"]],\"south\":[],\"east\":[[\"Nursery\",\"Craft room\"],[\"Craft room\",\"Gallery\"]],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-28T04:55:05.841123",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: north\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\",\"Gallery\",\"Playroom\",\"Balcony\"],\"edges\":{\"north\":[[\"Playroom\",\"Craft room\"],[\"Balcony\",\"Playroom\"]],\"south\":[],\"east\":[[\"Nursery\",\"Craft room\"],[\"Craft room\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:55:05.841137",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Playroom. Currently available directions: north, south. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:55:05.841153",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:55:05.841176",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Balcony\", \"new\": \"Playroom\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:55:05.841194",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Nursery', 'Craft room', 'Gallery', 'Playroom', 'Balcony'], 'edges': {'north': [['Playroom', 'Craft room'], ['Balcony', 'Playroom']], 'south': [], 'east': [['Nursery', 'Craft room'], ['Craft room', 'Gallery']], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T04:56:22.183841",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Playroom. Currently available directions: north, south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:56:22.183860",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\",\"Gallery\",\"Playroom\",\"Balcony\"],\"edges\":{\"north\":[[\"Playroom\",\"Craft room\"],[\"Balcony\",\"Playroom\"]],\"south\":[[\"Playroom\",\"Balcony\"]],\"east\":[[\"Nursery\",\"Craft room\"],[\"Craft room\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:56:22.183901",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:56:22.183925",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\",\"Gallery\",\"Playroom\",\"Balcony\"],\"edges\":{\"north\":[[\"Playroom\",\"Craft room\"],[\"Balcony\",\"Playroom\"]],\"south\":[[\"Playroom\",\"Balcony\"]],\"east\":[[\"Nursery\",\"Craft room\"],[\"Craft room\",\"Gallery\"]],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-28T04:57:13.844949",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\",\"Gallery\",\"Playroom\",\"Balcony\"],\"edges\":{\"north\":[[\"Playroom\",\"Craft room\"],[\"Balcony\",\"Playroom\"]],\"south\":[[\"Playroom\",\"Balcony\"]],\"east\":[[\"Nursery\",\"Craft room\"],[\"Craft room\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:57:13.844964",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Balcony. Currently available directions: north. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:57:13.844980",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:57:13.845002",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Playroom\", \"new\": \"Balcony\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:57:13.845020",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Nursery', 'Craft room', 'Gallery', 'Playroom', 'Balcony'], 'edges': {'north': [['Playroom', 'Craft room'], ['Balcony', 'Playroom']], 'south': [['Playroom', 'Balcony']], 'east': [['Nursery', 'Craft room'], ['Craft room', 'Gallery']], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-28T04:58:05.077053",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Balcony. Currently available directions: north. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:58:05.077075",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"DONE\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\",\"Gallery\",\"Playroom\",\"Balcony\"],\"edges\":{\"north\":[[\"Playroom\",\"Craft room\"],[\"Balcony\",\"Playroom\"]],\"south\":[[\"Playroom\",\"Balcony\"]],\"east\":[[\"Nursery\",\"Craft room\"],[\"Craft room\",\"Gallery\"]],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:58:05.077108",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:58:05.077135",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"DONE\",\"graph\":{\"nodes\":[\"Nursery\",\"Craft room\",\"Gallery\",\"Playroom\",\"Balcony\"],\"edges\":{\"north\":[[\"Playroom\",\"Craft room\"],[\"Balcony\",\"Playroom\"]],\"south\":[[\"Playroom\",\"Balcony\"]],\"east\":[[\"Nursery\",\"Craft room\"],[\"Craft room\",\"Gallery\"]],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-28T04:58:05.077227",
+        "action": {
+          "type": "stop",
+          "content": "The guesser decided to stop the game"
+        }
+      }
+    ]
+  ]
+}

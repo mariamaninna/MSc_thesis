@@ -1,0 +1,1777 @@
+{
+  "meta": {
+    "game_name": "textmapworld_graphreasoning",
+    "experiment_name": "large",
+    "game_id": 27,
+    "results_folder": "llama-3.1-8b-instruct",
+    "clem_version": "3.7.2",
+    "round_count": 20,
+    "completed": true
+  },
+  "player_models": {
+    "0": {
+      "model_spec": {
+        "model_name": "llama-3.1-8b-instruct",
+        "_is_base_model": true,
+        "backend": "huggingface_local",
+        "huggingface_id": "meta-llama/Llama-3.1-8B-Instruct",
+        "lookup_source": "/project/mmanina/MSc_thesis/libs/playpen/model_registry.json",
+        "model_config": {
+          "premade_chat_template": false,
+          "eos_to_cull": ""
+        }
+      },
+      "gen_args": {
+        "temperature": 0.0,
+        "max_tokens": 600
+      }
+    }
+  },
+  "players": {
+    "GM": {
+      "game_role": "Game Master",
+      "model_name": "programmatic"
+    },
+    "Player 1": {
+      "game_role": "PathGuesser",
+      "model_name": "llama-3.1-8b-instruct"
+    },
+    "Player 2": {
+      "game_role": "PathDescriber",
+      "model_name": "programmatic"
+    }
+  },
+  "turns": [
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:18:46.020303",
+        "action": {
+          "type": "send message",
+          "content": "Please help me with the following task. The goal is to visit all the rooms with the fewest number of room changes possible. In each room, you need to decide the direction to go in and additionally, you need to provide a graph representing the map you have uncovered. Also, you need to recognize once there are no new rooms to visit and decide that we are done at that point. Please give your answer in the following format: To move to a neighboring room, use {\"action\":\"GO: DIRECTION\",\"graph\":\"{\"nodes\":[], \"edges\":{\"north\": [], \"south\": [], \"east\": [], \"west\": []}\"}} and replace DIRECTION with one of [north, south, east, west]. To stop the exploration, answer with \"DONE\" instead. Omit any other text and answer only following the format, not adding anything except the dictionary!\nHere is an example: \nYou are in the Living Room. Currently available directions: south, west. What is your next instruction?\n{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}\nYou have made a step and entered a Library. Currently available directions: east, north. What is your next instruction?\n{\"action\":\"GO: north\", \"graph\":{\"nodes\":[\"Living Room\", \"Library\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[(\"Living Room\", \"Library\")]}}}\nYou have made a step and entered a Kitchen. Currently available directions: south, east. What is your next instruction?\n{\"action\":\"GO: east\", \"graph\":{\"nodes\": [\"Living Room\", \"Library\", \"Kitchen\"], \"edges\":{\"north\": [(\"Library\", \"Kitchen\")],\"south\": [],\"east\": [],\"west\": [(\"Living Room\", \"Library\")]}}}\n...\nYou have made a step and entered a Bedroom. Currently available directions: south, west. What is your next instruction?\n{\"action\": \"DONE\", \"graph\": {...}}\nLet us start.\nYou are in the Living room. Currently available directions: west, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:46.020318",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:46.020344",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:46.020364",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:18:47.255147",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:47.255161",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Pantry. Currently available directions: north, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:47.255176",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:47.255199",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Living room\", \"new\": \"Pantry\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:47.255213",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room'], 'edges': {'north': [], 'south': [], 'east': [], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:19:01.030630",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Pantry. Currently available directions: north, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:01.030646",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\"],\"edges\":{\"north\":[],\"south\":[(\"Pantry\", \"Living Room\")],\"east\":[],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:01.030673",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:01.030693",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\"],\"edges\":{\"north\":[],\"south\":[(\"Pantry\", \"Living Room\")],\"east\":[],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:19:02.646446",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\"],\"edges\":{\"north\":[],\"south\":[(\"Pantry\", \"Living Room\")],\"east\":[],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:02.646460",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Cellar. Currently available directions: south. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:02.646475",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:02.646497",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Pantry\", \"new\": \"Cellar\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:02.646513",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room', 'Pantry'], 'edges': {'north': [], 'south': [('Pantry', 'Living Room')], 'east': [], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:19:25.092743",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Cellar. Currently available directions: south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:25.092759",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Cellar\", \"Living Room\")],\"east\":[],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:25.092787",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:25.092809",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Cellar\", \"Living Room\")],\"east\":[],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:19:28.091681",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Cellar\", \"Living Room\")],\"east\":[],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:28.091711",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Pantry. Currently available directions: north, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:28.091727",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:28.091750",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Cellar\", \"new\": \"Pantry\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:28.091767",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room', 'Pantry', 'Cellar'], 'edges': {'north': [('Pantry', 'Cellar')], 'south': [('Cellar', 'Pantry'), ('Cellar', 'Living Room')], 'east': [], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:19:55.991681",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Pantry. Currently available directions: north, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:55.991697",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\")],\"east\":[(\"Pantry\", \"Pantry\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:55.991725",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:55.991748",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\")],\"east\":[(\"Pantry\", \"Pantry\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:19:58.423375",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\")],\"east\":[(\"Pantry\", \"Pantry\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:58.423390",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Living room. Currently available directions: west, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:58.423406",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:58.423428",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Pantry\", \"new\": \"Living room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:58.423446",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room', 'Pantry', 'Cellar', 'Pantry'], 'edges': {'north': [('Pantry', 'Cellar')], 'south': [('Cellar', 'Pantry'), ('Pantry', 'Living Room')], 'east': [('Pantry', 'Pantry')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:20:26.226132",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Living room. Currently available directions: west, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:26.226149",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:26.226177",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:26.226200",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:20:28.392271",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:28.392285",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Utility room. Currently available directions: south, west. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:28.392300",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:28.392322",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Living room\", \"new\": \"Utility room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:28.392341",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room', 'Pantry', 'Cellar', 'Pantry', 'Living Room'], 'edges': {'north': [('Pantry', 'Cellar')], 'south': [('Cellar', 'Pantry'), ('Pantry', 'Living Room')], 'east': [('Living Room', 'Living Room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:20:59.108710",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Utility room. Currently available directions: south, west. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:59.108725",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:59.108755",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:59.108781",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:21:01.021623",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:01.021638",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Laundry room. Currently available directions: north, south. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:01.021653",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:01.021676",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Utility room\", \"new\": \"Laundry room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:01.021695",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room', 'Pantry', 'Cellar', 'Pantry', 'Living Room', 'Utility room'], 'edges': {'north': [('Pantry', 'Cellar'), ('Utility room', 'Pantry')], 'south': [('Cellar', 'Pantry'), ('Pantry', 'Living Room'), ('Utility room', 'Living Room')], 'east': [('Living Room', 'Living Room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:21:35.483972",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Laundry room. Currently available directions: north, south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:35.483991",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:35.484022",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:35.484054",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:21:37.430605",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:37.430619",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Workshop. Currently available directions: north, west. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:37.430635",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:37.430657",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Laundry room\", \"new\": \"Workshop\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:37.430678",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room', 'Pantry', 'Cellar', 'Pantry', 'Living Room', 'Utility room', 'Laundry room'], 'edges': {'north': [('Pantry', 'Cellar'), ('Utility room', 'Pantry'), ('Laundry room', 'Utility room')], 'south': [('Cellar', 'Pantry'), ('Pantry', 'Living Room'), ('Utility room', 'Living Room'), ('Laundry room', 'Utility room')], 'east': [('Living Room', 'Living Room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:22:16.013063",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Workshop. Currently available directions: north, west. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:16.013081",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:16.013113",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:16.013142",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:22:16.021471",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:16.021485",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Laundry room. Currently available directions: north, south. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:16.021500",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:16.021523",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Workshop\", \"new\": \"Laundry room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:16.021544",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room', 'Pantry', 'Cellar', 'Pantry', 'Living Room', 'Utility room', 'Laundry room', 'Workshop'], 'edges': {'north': [('Pantry', 'Cellar'), ('Utility room', 'Pantry'), ('Laundry room', 'Utility room'), ('Workshop', 'Laundry room')], 'south': [('Cellar', 'Pantry'), ('Pantry', 'Living Room'), ('Utility room', 'Living Room'), ('Laundry room', 'Utility room')], 'east': [('Living Room', 'Living Room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:22:57.450565",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Laundry room. Currently available directions: north, south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:57.450581",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:57.450613",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:57.450644",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:22:57.458879",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:57.458893",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Utility room. Currently available directions: south, west. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:57.458908",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:57.458930",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Laundry room\", \"new\": \"Utility room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:57.458952",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room', 'Pantry', 'Cellar', 'Pantry', 'Living Room', 'Utility room', 'Laundry room', 'Workshop', 'Laundry room'], 'edges': {'north': [('Pantry', 'Cellar'), ('Utility room', 'Pantry'), ('Laundry room', 'Utility room'), ('Workshop', 'Laundry room')], 'south': [('Cellar', 'Pantry'), ('Pantry', 'Living Room'), ('Utility room', 'Living Room'), ('Laundry room', 'Utility room'), ('Laundry room', 'Workshop')], 'east': [('Living Room', 'Living Room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:23:43.311126",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Utility room. Currently available directions: south, west. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:43.311142",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:43.311174",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:43.311205",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:23:43.318809",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:43.318824",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Laundry room. Currently available directions: north, south. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:43.318840",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:43.318866",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Utility room\", \"new\": \"Laundry room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:43.318889",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room', 'Pantry', 'Cellar', 'Pantry', 'Living Room', 'Utility room', 'Laundry room', 'Workshop', 'Laundry room', 'Utility room'], 'edges': {'north': [('Pantry', 'Cellar'), ('Utility room', 'Pantry'), ('Laundry room', 'Utility room'), ('Workshop', 'Laundry room')], 'south': [('Cellar', 'Pantry'), ('Pantry', 'Living Room'), ('Utility room', 'Living Room'), ('Laundry room', 'Utility room'), ('Laundry room', 'Workshop'), ('Utility room', 'Utility room')], 'east': [('Living Room', 'Living Room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:24:29.769028",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Laundry room. Currently available directions: north, south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:24:29.769046",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:24:29.769110",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:24:29.769147",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:24:29.777603",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:24:29.777617",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Workshop. Currently available directions: north, west. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:24:29.777633",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:24:29.777659",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Laundry room\", \"new\": \"Workshop\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:24:29.777685",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room', 'Pantry', 'Cellar', 'Pantry', 'Living Room', 'Utility room', 'Laundry room', 'Workshop', 'Laundry room', 'Utility room', 'Laundry room'], 'edges': {'north': [('Pantry', 'Cellar'), ('Utility room', 'Pantry'), ('Laundry room', 'Utility room'), ('Workshop', 'Laundry room')], 'south': [('Cellar', 'Pantry'), ('Pantry', 'Living Room'), ('Utility room', 'Living Room'), ('Laundry room', 'Utility room'), ('Laundry room', 'Workshop'), ('Utility room', 'Utility room'), ('Laundry room', 'Laundry room')], 'east': [('Living Room', 'Living Room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:25:17.907809",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Workshop. Currently available directions: north, west. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:25:17.907825",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:25:17.907884",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:25:17.907920",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:25:17.915891",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:25:17.915906",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Laundry room. Currently available directions: north, south. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:25:17.915921",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:25:17.915948",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Workshop\", \"new\": \"Laundry room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:25:17.915973",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room', 'Pantry', 'Cellar', 'Pantry', 'Living Room', 'Utility room', 'Laundry room', 'Workshop', 'Laundry room', 'Utility room', 'Laundry room', 'Workshop'], 'edges': {'north': [('Pantry', 'Cellar'), ('Utility room', 'Pantry'), ('Laundry room', 'Utility room'), ('Workshop', 'Laundry room')], 'south': [('Cellar', 'Pantry'), ('Pantry', 'Living Room'), ('Utility room', 'Living Room'), ('Laundry room', 'Utility room'), ('Laundry room', 'Workshop'), ('Utility room', 'Utility room'), ('Laundry room', 'Laundry room')], 'east': [('Living Room', 'Living Room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:26:10.950067",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Laundry room. Currently available directions: north, south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:26:10.950083",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Laundry room\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:26:10.950144",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:26:10.950183",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Laundry room\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:26:10.957676",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Laundry room\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:26:10.957689",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Workshop. Currently available directions: north, west. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:26:10.957704",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:26:10.957726",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Laundry room\", \"new\": \"Workshop\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:26:10.957749",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room', 'Pantry', 'Cellar', 'Pantry', 'Living Room', 'Utility room', 'Laundry room', 'Workshop', 'Laundry room', 'Utility room', 'Laundry room', 'Workshop', 'Laundry room'], 'edges': {'north': [('Pantry', 'Cellar'), ('Utility room', 'Pantry'), ('Laundry room', 'Utility room'), ('Workshop', 'Laundry room')], 'south': [('Cellar', 'Pantry'), ('Pantry', 'Living Room'), ('Utility room', 'Living Room'), ('Laundry room', 'Utility room'), ('Laundry room', 'Workshop'), ('Utility room', 'Utility room'), ('Laundry room', 'Laundry room'), ('Laundry room', 'Laundry room')], 'east': [('Living Room', 'Living Room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:27:07.846178",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Workshop. Currently available directions: north, west. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:27:07.846193",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:27:07.846228",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:27:07.846262",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:27:11.426455",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:27:11.426470",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Solarium. Currently available directions: west, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:27:11.426485",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:27:11.426507",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Workshop\", \"new\": \"Solarium\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:27:11.426532",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room', 'Pantry', 'Cellar', 'Pantry', 'Living Room', 'Utility room', 'Laundry room', 'Workshop', 'Laundry room', 'Utility room', 'Laundry room', 'Workshop', 'Workshop', 'Laundry room'], 'edges': {'north': [('Pantry', 'Cellar'), ('Utility room', 'Pantry'), ('Laundry room', 'Utility room'), ('Workshop', 'Laundry room')], 'south': [('Cellar', 'Pantry'), ('Pantry', 'Living Room'), ('Utility room', 'Living Room'), ('Laundry room', 'Utility room'), ('Laundry room', 'Workshop'), ('Utility room', 'Utility room'), ('Laundry room', 'Laundry room'), ('Workshop', 'Laundry room')], 'east': [('Living Room', 'Living Room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:28:14.145818",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Solarium. Currently available directions: west, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:28:14.145834",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\", \"Solarium\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\"), (\"Solarium\", \"Solarium\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:28:14.145875",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:28:14.145912",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\", \"Solarium\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\"), (\"Solarium\", \"Solarium\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:28:17.623668",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\", \"Solarium\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\"), (\"Solarium\", \"Solarium\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:28:17.623683",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Closet. Currently available directions: east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:28:17.623698",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:28:17.623720",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Solarium\", \"new\": \"Closet\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:28:17.623744",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room', 'Pantry', 'Cellar', 'Pantry', 'Living Room', 'Utility room', 'Laundry room', 'Workshop', 'Laundry room', 'Utility room', 'Laundry room', 'Workshop', 'Workshop', 'Laundry room', 'Solarium'], 'edges': {'north': [('Pantry', 'Cellar'), ('Utility room', 'Pantry'), ('Laundry room', 'Utility room'), ('Workshop', 'Laundry room')], 'south': [('Cellar', 'Pantry'), ('Pantry', 'Living Room'), ('Utility room', 'Living Room'), ('Laundry room', 'Utility room'), ('Laundry room', 'Workshop'), ('Utility room', 'Utility room'), ('Laundry room', 'Laundry room'), ('Workshop', 'Laundry room')], 'east': [('Living Room', 'Living Room'), ('Solarium', 'Solarium')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:29:23.267255",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Closet. Currently available directions: east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:29:23.267272",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\", \"Solarium\", \"Closet\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\"), (\"Solarium\", \"Solarium\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:29:23.267308",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:29:23.267345",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\", \"Solarium\", \"Closet\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\"), (\"Solarium\", \"Solarium\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:29:23.274440",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\", \"Solarium\", \"Closet\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\"), (\"Solarium\", \"Solarium\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:29:23.274454",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Solarium. Currently available directions: west, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:29:23.274469",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:29:23.274492",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Closet\", \"new\": \"Solarium\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:29:23.274517",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room', 'Pantry', 'Cellar', 'Pantry', 'Living Room', 'Utility room', 'Laundry room', 'Workshop', 'Laundry room', 'Utility room', 'Laundry room', 'Workshop', 'Workshop', 'Laundry room', 'Solarium', 'Closet'], 'edges': {'north': [('Pantry', 'Cellar'), ('Utility room', 'Pantry'), ('Laundry room', 'Utility room'), ('Workshop', 'Laundry room')], 'south': [('Cellar', 'Pantry'), ('Pantry', 'Living Room'), ('Utility room', 'Living Room'), ('Laundry room', 'Utility room'), ('Laundry room', 'Workshop'), ('Utility room', 'Utility room'), ('Laundry room', 'Laundry room'), ('Workshop', 'Laundry room')], 'east': [('Living Room', 'Living Room'), ('Solarium', 'Solarium')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:30:33.417511",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Solarium. Currently available directions: west, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:30:33.417529",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\", \"Solarium\", \"Closet\", \"Solarium\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\"), (\"Solarium\", \"Solarium\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:30:33.417575",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:30:33.417612",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\", \"Solarium\", \"Closet\", \"Solarium\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\"), (\"Solarium\", \"Solarium\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:30:33.424572",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\", \"Solarium\", \"Closet\", \"Solarium\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\"), (\"Solarium\", \"Solarium\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:30:33.424586",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Closet. Currently available directions: east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:30:33.424601",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:30:33.424624",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Solarium\", \"new\": \"Closet\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:30:33.424651",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room', 'Pantry', 'Cellar', 'Pantry', 'Living Room', 'Utility room', 'Laundry room', 'Workshop', 'Laundry room', 'Utility room', 'Laundry room', 'Workshop', 'Workshop', 'Laundry room', 'Solarium', 'Closet', 'Solarium'], 'edges': {'north': [('Pantry', 'Cellar'), ('Utility room', 'Pantry'), ('Laundry room', 'Utility room'), ('Workshop', 'Laundry room')], 'south': [('Cellar', 'Pantry'), ('Pantry', 'Living Room'), ('Utility room', 'Living Room'), ('Laundry room', 'Utility room'), ('Laundry room', 'Workshop'), ('Utility room', 'Utility room'), ('Laundry room', 'Laundry room'), ('Workshop', 'Laundry room')], 'east': [('Living Room', 'Living Room'), ('Solarium', 'Solarium')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:31:52.801050",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Closet. Currently available directions: east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:31:52.801069",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\", \"Solarium\", \"Closet\", \"Solarium\", \"Closet\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\"), (\"Solarium\", \"Solarium\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:31:52.801113",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:31:52.801151",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\", \"Solarium\", \"Closet\", \"Solarium\", \"Closet\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\"), (\"Solarium\", \"Solarium\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:31:52.808430",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\", \"Solarium\", \"Closet\", \"Solarium\", \"Closet\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\"), (\"Solarium\", \"Solarium\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:31:52.808445",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Solarium. Currently available directions: west, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:31:52.808461",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:31:52.808484",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Closet\", \"new\": \"Solarium\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:31:52.808510",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room', 'Pantry', 'Cellar', 'Pantry', 'Living Room', 'Utility room', 'Laundry room', 'Workshop', 'Laundry room', 'Utility room', 'Laundry room', 'Workshop', 'Workshop', 'Laundry room', 'Solarium', 'Closet', 'Solarium', 'Closet'], 'edges': {'north': [('Pantry', 'Cellar'), ('Utility room', 'Pantry'), ('Laundry room', 'Utility room'), ('Workshop', 'Laundry room')], 'south': [('Cellar', 'Pantry'), ('Pantry', 'Living Room'), ('Utility room', 'Living Room'), ('Laundry room', 'Utility room'), ('Laundry room', 'Workshop'), ('Utility room', 'Utility room'), ('Laundry room', 'Laundry room'), ('Workshop', 'Laundry room')], 'east': [('Living Room', 'Living Room'), ('Solarium', 'Solarium')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:33:19.947146",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Solarium. Currently available directions: west, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:33:19.947166",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\", \"Solarium\", \"Closet\", \"Solarium\", \"Closet\", \"Solarium\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\"), (\"Solarium\", \"Solarium\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:33:19.947214",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:33:19.947252",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\", \"Solarium\", \"Closet\", \"Solarium\", \"Closet\", \"Solarium\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\"), (\"Solarium\", \"Solarium\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:33:19.954490",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\", \"Solarium\", \"Closet\", \"Solarium\", \"Closet\", \"Solarium\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\"), (\"Solarium\", \"Solarium\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:33:19.954504",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Closet. Currently available directions: east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:33:19.954519",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:33:19.954542",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Solarium\", \"new\": \"Closet\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:33:19.954568",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Living Room', 'Pantry', 'Cellar', 'Pantry', 'Living Room', 'Utility room', 'Laundry room', 'Workshop', 'Laundry room', 'Utility room', 'Laundry room', 'Workshop', 'Workshop', 'Laundry room', 'Solarium', 'Closet', 'Solarium', 'Closet', 'Solarium'], 'edges': {'north': [('Pantry', 'Cellar'), ('Utility room', 'Pantry'), ('Laundry room', 'Utility room'), ('Workshop', 'Laundry room')], 'south': [('Cellar', 'Pantry'), ('Pantry', 'Living Room'), ('Utility room', 'Living Room'), ('Laundry room', 'Utility room'), ('Laundry room', 'Workshop'), ('Utility room', 'Utility room'), ('Laundry room', 'Laundry room'), ('Workshop', 'Laundry room')], 'east': [('Living Room', 'Living Room'), ('Solarium', 'Solarium')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:34:50.446891",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Closet. Currently available directions: east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:34:50.446909",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\", \"Solarium\", \"Closet\", \"Solarium\", \"Closet\", \"Solarium\", \"Closet\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\"), (\"Solarium\", \"Solarium\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:34:50.446950",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:34:50.446990",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\", \"Solarium\", \"Closet\", \"Solarium\", \"Closet\", \"Solarium\", \"Closet\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\"), (\"Solarium\", \"Solarium\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:34:51.990330",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Living Room\", \"Pantry\", \"Cellar\", \"Pantry\", \"Living Room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Laundry room\", \"Utility room\", \"Laundry room\", \"Workshop\", \"Workshop\", \"Laundry room\", \"Solarium\", \"Closet\", \"Solarium\", \"Closet\", \"Solarium\", \"Closet\"],\"edges\":{\"north\":[(\"Pantry\", \"Cellar\"), (\"Utility room\", \"Pantry\"), (\"Laundry room\", \"Utility room\"), (\"Workshop\", \"Laundry room\")],\"south\":[(\"Cellar\", \"Pantry\"), (\"Pantry\", \"Living Room\"), (\"Utility room\", \"Living Room\"), (\"Laundry room\", \"Utility room\"), (\"Laundry room\", \"Workshop\"), (\"Utility room\", \"Utility room\"), (\"Laundry room\", \"Laundry room\"), (\"Workshop\", \"Laundry room\")],\"east\":[(\"Living Room\", \"Living Room\"), (\"Solarium\", \"Solarium\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:34:51.990351",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Solarium. Currently available directions: west, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:34:51.990368",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:34:51.990388",
+        "action": {
+          "type": "turns_limit",
+          "content": "turn limit reached, game lost 20"
+        }
+      }
+    ]
+  ]
+}

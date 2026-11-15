@@ -1,0 +1,860 @@
+{
+  "meta": {
+    "game_name": "textmapworld_graphreasoning",
+    "experiment_name": "small",
+    "game_id": 1,
+    "results_folder": "llama-3.1-8b-instruct",
+    "clem_version": "3.7.2",
+    "round_count": 10,
+    "completed": true
+  },
+  "player_models": {
+    "0": {
+      "model_spec": {
+        "model_name": "llama-3.1-8b-instruct",
+        "_is_base_model": true,
+        "backend": "huggingface_local",
+        "huggingface_id": "meta-llama/Llama-3.1-8B-Instruct",
+        "lookup_source": "/project/mmanina/MSc_thesis/libs/playpen/model_registry.json",
+        "model_config": {
+          "premade_chat_template": false,
+          "eos_to_cull": ""
+        }
+      },
+      "gen_args": {
+        "temperature": 0.0,
+        "max_tokens": 600
+      }
+    }
+  },
+  "players": {
+    "GM": {
+      "game_role": "Game Master",
+      "model_name": "programmatic"
+    },
+    "Player 1": {
+      "game_role": "PathGuesser",
+      "model_name": "llama-3.1-8b-instruct"
+    },
+    "Player 2": {
+      "game_role": "PathDescriber",
+      "model_name": "programmatic"
+    }
+  },
+  "turns": [
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:18:37.810456",
+        "action": {
+          "type": "send message",
+          "content": "Please help me with the following task. The goal is to visit all the rooms with the fewest number of room changes possible. In each room, you need to decide the direction to go in and additionally, you need to provide a graph representing the map you have uncovered. Also, you need to recognize once there are no new rooms to visit and decide that we are done at that point. Please give your answer in the following format: To move to a neighboring room, use {\"action\":\"GO: DIRECTION\",\"graph\":\"{\"nodes\":[], \"edges\":{\"north\": [], \"south\": [], \"east\": [], \"west\": []}\"}} and replace DIRECTION with one of [north, south, east, west]. To stop the exploration, answer with \"DONE\" instead. Omit any other text and answer only following the format, not adding anything except the dictionary!\nHere is an example: \nYou are in the Living Room. Currently available directions: south, west. What is your next instruction?\n{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}\nYou have made a step and entered a Library. Currently available directions: east, north. What is your next instruction?\n{\"action\":\"GO: north\", \"graph\":{\"nodes\":[\"Living Room\", \"Library\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[(\"Living Room\", \"Library\")]}}}\nYou have made a step and entered a Kitchen. Currently available directions: south, east. What is your next instruction?\n{\"action\":\"GO: east\", \"graph\":{\"nodes\": [\"Living Room\", \"Library\", \"Kitchen\"], \"edges\":{\"north\": [(\"Library\", \"Kitchen\")],\"south\": [],\"east\": [],\"west\": [(\"Living Room\", \"Library\")]}}}\n...\nYou have made a step and entered a Bedroom. Currently available directions: south, west. What is your next instruction?\n{\"action\": \"DONE\", \"graph\": {...}}\nLet us start.\nYou are in the Closet. Currently available directions: north, south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:37.810475",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Closet\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:37.810509",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:37.810532",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Closet\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:18:47.248719",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Closet\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:47.248733",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Cellar. Currently available directions: north, west. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:47.248749",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:47.248774",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Closet\", \"new\": \"Cellar\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:47.248790",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Closet'], 'edges': {'north': [], 'south': [], 'east': [], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:18:49.016988",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Cellar. Currently available directions: north, west. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:49.017006",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\")],\"south\":[],\"east\":[],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:49.017039",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:49.017061",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\")],\"south\":[],\"east\":[],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:19:02.639211",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\")],\"south\":[],\"east\":[],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:02.639226",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Exercise room. Currently available directions: east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:02.639241",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:02.639265",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Cellar\", \"new\": \"Exercise room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:02.639281",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Closet', 'Cellar'], 'edges': {'north': [('Cellar', 'Closet')], 'south': [], 'east': [], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:19:05.157442",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Exercise room. Currently available directions: east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:05.157464",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\")],\"south\":[],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:05.157506",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:05.157533",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\")],\"south\":[],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:19:28.085298",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\")],\"south\":[],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:28.085313",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Cellar. Currently available directions: north, west. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:28.085329",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:28.085370",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Exercise room\", \"new\": \"Cellar\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:28.085391",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Closet', 'Cellar', 'Exercise room'], 'edges': {'north': [('Cellar', 'Closet')], 'south': [], 'east': [('Cellar', 'Exercise room')], 'west': [('Closet', 'Cellar')]}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:19:32.024097",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Cellar. Currently available directions: north, west. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:32.024114",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:32.024186",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:32.024212",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:19:58.416309",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:58.416326",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Closet. Currently available directions: north, south. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:58.416342",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:58.416414",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Cellar\", \"new\": \"Closet\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:58.416440",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Closet', 'Cellar', 'Exercise room'], 'edges': {'north': [('Cellar', 'Closet')], 'south': [('Cellar', 'Exercise room')], 'east': [('Cellar', 'Exercise room')], 'west': [('Closet', 'Cellar')]}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:20:02.559197",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Closet. Currently available directions: north, south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:02.559220",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:02.559320",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:02.559350",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:20:28.385261",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:28.385276",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Sunroom. Currently available directions: south. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:28.385293",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:28.385362",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Closet\", \"new\": \"Sunroom\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:28.385385",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Closet', 'Cellar', 'Exercise room'], 'edges': {'north': [('Cellar', 'Closet')], 'south': [('Cellar', 'Exercise room')], 'east': [('Cellar', 'Exercise room')], 'west': [('Closet', 'Cellar')]}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:20:33.094653",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Sunroom. Currently available directions: south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:33.094673",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\", \"Sunroom\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\"), (\"Sunroom\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:33.094744",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:33.094774",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\", \"Sunroom\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\"), (\"Sunroom\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:21:01.014806",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\", \"Sunroom\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\"), (\"Sunroom\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:01.014823",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Closet. Currently available directions: north, south. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:01.014839",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:01.014902",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Sunroom\", \"new\": \"Closet\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:01.014925",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Closet', 'Cellar', 'Exercise room', 'Sunroom'], 'edges': {'north': [('Cellar', 'Closet'), ('Sunroom', 'Closet')], 'south': [('Cellar', 'Exercise room')], 'east': [('Cellar', 'Exercise room')], 'west': [('Closet', 'Cellar')]}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:21:06.004424",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Closet. Currently available directions: north, south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:06.004441",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\", \"Sunroom\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\"), (\"Sunroom\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:06.004502",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:06.004530",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\", \"Sunroom\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\"), (\"Sunroom\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:21:37.423586",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\", \"Sunroom\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\"), (\"Sunroom\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:37.423604",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Sunroom. Currently available directions: south. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:37.423621",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:37.423670",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Closet\", \"new\": \"Sunroom\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:37.423692",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Closet', 'Cellar', 'Exercise room', 'Sunroom'], 'edges': {'north': [('Cellar', 'Closet'), ('Sunroom', 'Closet')], 'south': [('Cellar', 'Exercise room')], 'east': [('Cellar', 'Exercise room')], 'west': [('Closet', 'Cellar')]}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:21:42.776863",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Sunroom. Currently available directions: south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:42.776881",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\", \"Sunroom\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\"), (\"Sunroom\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:42.776955",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:42.776982",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\", \"Sunroom\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\"), (\"Sunroom\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:22:16.014429",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\", \"Sunroom\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\"), (\"Sunroom\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:16.014446",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Closet. Currently available directions: north, south. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:16.014462",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:16.014524",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Sunroom\", \"new\": \"Closet\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:16.014549",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Closet', 'Cellar', 'Exercise room', 'Sunroom'], 'edges': {'north': [('Cellar', 'Closet'), ('Sunroom', 'Closet')], 'south': [('Cellar', 'Exercise room')], 'east': [('Cellar', 'Exercise room')], 'west': [('Closet', 'Cellar')]}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:22:21.502720",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Closet. Currently available directions: north, south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:21.502738",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\", \"Sunroom\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\"), (\"Sunroom\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:21.502798",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:21.502825",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\", \"Sunroom\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\"), (\"Sunroom\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:22:57.451886",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\", \"Sunroom\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\"), (\"Sunroom\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:57.451902",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Sunroom. Currently available directions: south. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:57.451918",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:57.451976",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Closet\", \"new\": \"Sunroom\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:57.451999",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Closet', 'Cellar', 'Exercise room', 'Sunroom'], 'edges': {'north': [('Cellar', 'Closet'), ('Sunroom', 'Closet')], 'south': [('Cellar', 'Exercise room')], 'east': [('Cellar', 'Exercise room')], 'west': [('Closet', 'Cellar')]}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:23:03.322888",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Sunroom. Currently available directions: south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:03.322906",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Closet\", \"Cellar\", \"Exercise room\", \"Sunroom\"],\"edges\":{\"north\":[(\"Cellar\", \"Closet\"), (\"Sunroom\", \"Closet\")],\"south\":[(\"Cellar\", \"Exercise room\")],\"east\":[(\"Cellar\", \"Exercise room\")],\"west\":[(\"Closet\", \"Cellar\")]}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:03.322965",
+        "action": {
+          "type": "aborted",
+          "content": "abort game"
+        }
+      }
+    ]
+  ]
+}

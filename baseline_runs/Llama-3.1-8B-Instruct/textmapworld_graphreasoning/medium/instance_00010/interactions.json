@@ -1,0 +1,1777 @@
+{
+  "meta": {
+    "game_name": "textmapworld_graphreasoning",
+    "experiment_name": "medium",
+    "game_id": 10,
+    "results_folder": "llama-3.1-8b-instruct",
+    "clem_version": "3.7.2",
+    "round_count": 20,
+    "completed": true
+  },
+  "player_models": {
+    "0": {
+      "model_spec": {
+        "model_name": "llama-3.1-8b-instruct",
+        "_is_base_model": true,
+        "backend": "huggingface_local",
+        "huggingface_id": "meta-llama/Llama-3.1-8B-Instruct",
+        "lookup_source": "/project/mmanina/MSc_thesis/libs/playpen/model_registry.json",
+        "model_config": {
+          "premade_chat_template": false,
+          "eos_to_cull": ""
+        }
+      },
+      "gen_args": {
+        "temperature": 0.0,
+        "max_tokens": 600
+      }
+    }
+  },
+  "players": {
+    "GM": {
+      "game_role": "Game Master",
+      "model_name": "programmatic"
+    },
+    "Player 1": {
+      "game_role": "PathGuesser",
+      "model_name": "llama-3.1-8b-instruct"
+    },
+    "Player 2": {
+      "game_role": "PathDescriber",
+      "model_name": "programmatic"
+    }
+  },
+  "turns": [
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:18:40.448940",
+        "action": {
+          "type": "send message",
+          "content": "Please help me with the following task. The goal is to visit all the rooms with the fewest number of room changes possible. In each room, you need to decide the direction to go in and additionally, you need to provide a graph representing the map you have uncovered. Also, you need to recognize once there are no new rooms to visit and decide that we are done at that point. Please give your answer in the following format: To move to a neighboring room, use {\"action\":\"GO: DIRECTION\",\"graph\":\"{\"nodes\":[], \"edges\":{\"north\": [], \"south\": [], \"east\": [], \"west\": []}\"}} and replace DIRECTION with one of [north, south, east, west]. To stop the exploration, answer with \"DONE\" instead. Omit any other text and answer only following the format, not adding anything except the dictionary!\nHere is an example: \nYou are in the Living Room. Currently available directions: south, west. What is your next instruction?\n{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Living Room\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}\nYou have made a step and entered a Library. Currently available directions: east, north. What is your next instruction?\n{\"action\":\"GO: north\", \"graph\":{\"nodes\":[\"Living Room\", \"Library\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[(\"Living Room\", \"Library\")]}}}\nYou have made a step and entered a Kitchen. Currently available directions: south, east. What is your next instruction?\n{\"action\":\"GO: east\", \"graph\":{\"nodes\": [\"Living Room\", \"Library\", \"Kitchen\"], \"edges\":{\"north\": [(\"Library\", \"Kitchen\")],\"south\": [],\"east\": [],\"west\": [(\"Living Room\", \"Library\")]}}}\n...\nYou have made a step and entered a Bedroom. Currently available directions: south, west. What is your next instruction?\n{\"action\": \"DONE\", \"graph\": {...}}\nLet us start.\nYou are in the Media room. Currently available directions: north, south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:40.448956",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Media room\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:40.448982",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:40.449002",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Media room\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:18:47.250908",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Media room\"],\"edges\":{\"north\":[],\"south\":[],\"east\":[],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:47.250922",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Garage. Currently available directions: north, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:47.250937",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:47.250960",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Media room\", \"new\": \"Garage\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:47.250974",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room'], 'edges': {'north': [], 'south': [], 'east': [], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:18:52.689675",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Garage. Currently available directions: north, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:52.689690",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\"],\"edges\":{\"north\":[(\"Media room\", \"Garage\")],\"south\":[],\"east\":[],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:52.689716",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:18:52.689736",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\"],\"edges\":{\"north\":[(\"Media room\", \"Garage\")],\"south\":[],\"east\":[],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:19:02.641695",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\"],\"edges\":{\"north\":[(\"Media room\", \"Garage\")],\"south\":[],\"east\":[],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:02.641708",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Exercise room. Currently available directions: west, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:02.641723",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:02.641745",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Garage\", \"new\": \"Exercise room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:02.641763",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room', 'Garage'], 'edges': {'north': [('Media room', 'Garage')], 'south': [], 'east': [], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:19:09.982411",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Exercise room. Currently available directions: west, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:09.982426",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\"],\"edges\":{\"north\":[(\"Media room\", \"Garage\")],\"south\":[],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:09.982453",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:09.982475",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\"],\"edges\":{\"north\":[(\"Media room\", \"Garage\")],\"south\":[],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:19:28.087727",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\"],\"edges\":{\"north\":[(\"Media room\", \"Garage\")],\"south\":[],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:28.087742",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Closet. Currently available directions: north, west. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:28.087757",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:28.087784",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Exercise room\", \"new\": \"Closet\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:28.087801",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room', 'Garage', 'Exercise room'], 'edges': {'north': [('Media room', 'Garage')], 'south': [], 'east': [('Garage', 'Exercise room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:19:41.469049",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Closet. Currently available directions: north, west. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:41.469064",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\"],\"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")],\"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:41.469120",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:41.469147",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\"],\"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")],\"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:19:58.419009",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\"],\"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")],\"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:58.419024",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Home office. Currently available directions: south. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:58.419039",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:58.419068",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Closet\", \"new\": \"Home office\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:19:58.419089",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room', 'Garage', 'Exercise room', 'Closet'], 'edges': {'north': [('Garage', 'Closet'), ('Exercise room', 'Closet')], 'south': [('Closet', 'Exercise room'), ('Closet', 'Garage')], 'east': [('Garage', 'Exercise room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:20:11.945562",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Home office. Currently available directions: south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:11.945579",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"],\"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:11.945638",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:11.945666",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"],\"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:20:28.388017",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"],\"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:28.388032",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Closet. Currently available directions: north, west. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:28.388048",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:28.388075",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Home office\", \"new\": \"Closet\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:28.388095",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room', 'Garage', 'Exercise room', 'Closet', 'Home office'], 'edges': {'north': [('Garage', 'Closet'), ('Exercise room', 'Closet')], 'south': [('Closet', 'Exercise room'), ('Closet', 'Garage'), ('Home office', 'Closet')], 'east': [('Garage', 'Exercise room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:20:43.883123",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Closet. Currently available directions: north, west. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:43.883140",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:43.883212",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:20:43.883241",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:21:01.017377",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:01.017392",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Home office. Currently available directions: south. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:01.017408",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:01.017435",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Closet\", \"new\": \"Home office\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:01.017456",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room', 'Garage', 'Exercise room', 'Closet', 'Home office'], 'edges': {'north': [('Garage', 'Closet'), ('Exercise room', 'Closet')], 'south': [('Closet', 'Exercise room'), ('Closet', 'Garage'), ('Home office', 'Closet')], 'east': [('Garage', 'Exercise room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:21:17.707100",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Home office. Currently available directions: south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:17.707115",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:17.707171",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:17.707200",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:21:37.426338",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:37.426353",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Closet. Currently available directions: north, west. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:37.426370",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:37.426398",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Home office\", \"new\": \"Closet\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:37.426419",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room', 'Garage', 'Exercise room', 'Closet', 'Home office'], 'edges': {'north': [('Garage', 'Closet'), ('Exercise room', 'Closet')], 'south': [('Closet', 'Exercise room'), ('Closet', 'Garage'), ('Home office', 'Closet')], 'east': [('Garage', 'Exercise room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:21:55.734734",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Closet. Currently available directions: north, west. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:55.734750",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:55.734808",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:21:55.734835",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:22:16.017060",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: north\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:16.017075",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Home office. Currently available directions: south. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:16.017091",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:16.017119",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Closet\", \"new\": \"Home office\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:16.017140",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room', 'Garage', 'Exercise room', 'Closet', 'Home office'], 'edges': {'north': [('Garage', 'Closet'), ('Exercise room', 'Closet')], 'south': [('Closet', 'Exercise room'), ('Closet', 'Garage'), ('Home office', 'Closet')], 'east': [('Garage', 'Exercise room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:22:35.262123",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Home office. Currently available directions: south. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:35.262139",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:35.262194",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:35.262222",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:22:57.454490",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: south\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:57.454505",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Closet. Currently available directions: north, west. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:57.454521",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:57.454548",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Home office\", \"new\": \"Closet\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:22:57.454568",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room', 'Garage', 'Exercise room', 'Closet', 'Home office'], 'edges': {'north': [('Garage', 'Closet'), ('Exercise room', 'Closet')], 'south': [('Closet', 'Exercise room'), ('Closet', 'Garage'), ('Home office', 'Closet')], 'east': [('Garage', 'Exercise room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:23:17.749380",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Closet. Currently available directions: north, west. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:17.749397",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:17.749453",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:17.749480",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:23:43.314030",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:43.314044",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Exercise room. Currently available directions: west, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:43.314059",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:43.314082",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Closet\", \"new\": \"Exercise room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:43.314101",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room', 'Garage', 'Exercise room', 'Closet', 'Home office'], 'edges': {'north': [('Garage', 'Closet'), ('Exercise room', 'Closet')], 'south': [('Closet', 'Exercise room'), ('Closet', 'Garage'), ('Home office', 'Closet')], 'east': [('Garage', 'Exercise room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:23:57.790728",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Exercise room. Currently available directions: west, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:57.790743",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:57.790772",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:23:57.790797",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:24:29.772481",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:24:29.772495",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Garage. Currently available directions: north, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:24:29.772510",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:24:29.772533",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Exercise room\", \"new\": \"Garage\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:24:29.772552",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room', 'Garage', 'Exercise room', 'Closet', 'Home office'], 'edges': {'north': [('Garage', 'Closet'), ('Exercise room', 'Closet')], 'south': [('Closet', 'Exercise room'), ('Closet', 'Garage'), ('Home office', 'Closet')], 'east': [('Garage', 'Exercise room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:24:44.622441",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Garage. Currently available directions: north, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:24:44.622456",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:24:44.622484",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:24:44.622509",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:25:17.911071",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:25:17.911085",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Exercise room. Currently available directions: west, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:25:17.911100",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:25:17.911123",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Garage\", \"new\": \"Exercise room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:25:17.911142",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room', 'Garage', 'Exercise room', 'Closet', 'Home office'], 'edges': {'north': [('Garage', 'Closet'), ('Exercise room', 'Closet')], 'south': [('Closet', 'Exercise room'), ('Closet', 'Garage'), ('Home office', 'Closet')], 'east': [('Garage', 'Exercise room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:25:31.997731",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Exercise room. Currently available directions: west, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:25:31.997746",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:25:31.997775",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:25:31.997800",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:26:10.953411",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:26:10.953425",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Closet. Currently available directions: north, west. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:26:10.953440",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:26:10.953462",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Exercise room\", \"new\": \"Closet\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:26:10.953481",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room', 'Garage', 'Exercise room', 'Closet', 'Home office'], 'edges': {'north': [('Garage', 'Closet'), ('Exercise room', 'Closet')], 'south': [('Closet', 'Exercise room'), ('Closet', 'Garage'), ('Home office', 'Closet')], 'east': [('Garage', 'Exercise room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:26:27.872960",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Closet. Currently available directions: north, west. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:26:27.872976",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:26:27.873006",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:26:27.873031",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:27:11.422057",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:27:11.422075",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Exercise room. Currently available directions: west, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:27:11.422093",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:27:11.422116",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Closet\", \"new\": \"Exercise room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:27:11.422134",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room', 'Garage', 'Exercise room', 'Closet', 'Home office'], 'edges': {'north': [('Garage', 'Closet'), ('Exercise room', 'Closet')], 'south': [('Closet', 'Exercise room'), ('Closet', 'Garage'), ('Home office', 'Closet')], 'east': [('Garage', 'Exercise room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:27:34.352390",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Exercise room. Currently available directions: west, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:27:34.352408",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:27:34.352438",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:27:34.352463",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:28:17.619208",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:28:17.619222",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Garage. Currently available directions: north, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:28:17.619238",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:28:17.619261",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Exercise room\", \"new\": \"Garage\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:28:17.619281",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room', 'Garage', 'Exercise room', 'Closet', 'Home office'], 'edges': {'north': [('Garage', 'Closet'), ('Exercise room', 'Closet')], 'south': [('Closet', 'Exercise room'), ('Closet', 'Garage'), ('Home office', 'Closet')], 'east': [('Garage', 'Exercise room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:28:40.247025",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Garage. Currently available directions: north, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:28:40.247060",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:28:40.247117",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:28:40.247161",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:29:23.270144",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:29:23.270161",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Exercise room. Currently available directions: west, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:29:23.270177",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:29:23.270205",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Garage\", \"new\": \"Exercise room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:29:23.270226",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room', 'Garage', 'Exercise room', 'Closet', 'Home office'], 'edges': {'north': [('Garage', 'Closet'), ('Exercise room', 'Closet')], 'south': [('Closet', 'Exercise room'), ('Closet', 'Garage'), ('Home office', 'Closet')], 'east': [('Garage', 'Exercise room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:29:50.837643",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Exercise room. Currently available directions: west, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:29:50.837661",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:29:50.837721",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:29:50.837750",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:30:33.420383",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:30:33.420399",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Closet. Currently available directions: north, west. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:30:33.420416",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:30:33.420448",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Exercise room\", \"new\": \"Closet\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:30:33.420468",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room', 'Garage', 'Exercise room', 'Closet', 'Home office'], 'edges': {'north': [('Garage', 'Closet'), ('Exercise room', 'Closet')], 'south': [('Closet', 'Exercise room'), ('Closet', 'Garage'), ('Home office', 'Closet')], 'east': [('Garage', 'Exercise room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:31:02.972848",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Closet. Currently available directions: north, west. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:31:02.972865",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:31:02.972922",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:31:02.972950",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:31:52.804088",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:31:52.804104",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Exercise room. Currently available directions: west, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:31:52.804120",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:31:52.804148",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Closet\", \"new\": \"Exercise room\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:31:52.804167",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room', 'Garage', 'Exercise room', 'Closet', 'Home office'], 'edges': {'north': [('Garage', 'Closet'), ('Exercise room', 'Closet')], 'south': [('Closet', 'Exercise room'), ('Closet', 'Garage'), ('Home office', 'Closet')], 'east': [('Garage', 'Exercise room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:32:24.413472",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Exercise room. Currently available directions: west, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:32:24.413488",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:32:24.413557",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:32:24.413590",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:33:19.950203",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: west\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:33:19.950220",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Garage. Currently available directions: north, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:33:19.950236",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:33:19.950265",
+        "action": {
+          "type": "move",
+          "content": "{\"old\": \"Exercise room\", \"new\": \"Garage\"}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:33:19.950286",
+        "action": {
+          "type": "graph",
+          "content": "{'nodes': ['Media room', 'Garage', 'Exercise room', 'Closet', 'Home office'], 'edges': {'north': [('Garage', 'Closet'), ('Exercise room', 'Closet')], 'south': [('Closet', 'Exercise room'), ('Closet', 'Garage'), ('Home office', 'Closet')], 'east': [('Garage', 'Exercise room')], 'west': []}}"
+        }
+      }
+    ],
+    [
+      {
+        "from": "GM",
+        "to": "Player 1",
+        "timestamp": "2026-09-27T20:33:56.312532",
+        "action": {
+          "type": "send message",
+          "content": "You have made a step and entered Garage. Currently available directions: north, east. What is your next instruction?",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 1",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:33:56.312548",
+        "action": {
+          "type": "get message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:33:56.312606",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:33:56.312635",
+        "action": {
+          "type": "parse",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "Player 2",
+        "timestamp": "2026-09-27T20:34:50.840358",
+        "action": {
+          "type": "send message",
+          "content": "{\"action\":\"GO: east\", \"graph\": {\"nodes\":[\"Media room\", \"Garage\", \"Exercise room\", \"Closet\", \"Home office\"], \"edges\":{\"north\":[(\"Garage\", \"Closet\"), (\"Exercise room\", \"Closet\")], \"south\":[(\"Closet\", \"Exercise room\"), (\"Closet\", \"Garage\"), (\"Home office\", \"Closet\")],\"east\":[(\"Garage\", \"Exercise room\")],\"west\":[]}}}",
+          "label": "context"
+        }
+      },
+      {
+        "from": "Player 2",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:34:50.840373",
+        "action": {
+          "type": "get message",
+          "content": "You have made a step and entered Exercise room. Currently available directions: west, east. What is your next instruction?",
+          "label": "response"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:34:50.840389",
+        "action": {
+          "type": "Valid format",
+          "content": "Continue"
+        }
+      },
+      {
+        "from": "GM",
+        "to": "GM",
+        "timestamp": "2026-09-27T20:34:50.840409",
+        "action": {
+          "type": "turns_limit",
+          "content": "turn limit reached, game lost 20"
+        }
+      }
+    ]
+  ]
+}

@@ -1,0 +1,471 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+    <style>
+        /* This CSS is based on a stack overflow answer by Roko C. Buljan in https://stackoverflow.com/a/71155446 */ 
+
+* {margin: 0; box-sizing: border-box;}
+
+body {
+  background-color: rgb(157, 152, 150);
+}
+
+.top-info {
+	text-align: center;
+	font: 1.25rem/1.5 sans-serif;
+	display: flex;
+	flex-direction: column;
+	padding: 1.25em;
+	width: 80%;
+  max-width: 1200px;
+	margin: auto;
+	background: #3f3e3e;
+	color: #fff;
+}
+
+.chat {
+  --rad: 1.5rem;
+  --rad-sm: .3rem;
+  font: 1rem/1.5 sans-serif;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  width: 80%;
+  max-width: 1200px;
+  margin: auto;
+  background: #fff;
+}
+
+.msg {
+  position: relative;
+  padding: .6rem 1.2rem;
+  margin-inline: 1rem;
+  margin-block: 2rem;
+}
+
+.game-round {
+  padding: 1.5rem 0 1.5rem 0;
+  background-color: #f0f8ff; /* light background for content */
+  position: relative; /* Important to position the badge */
+  border-radius: 1rem;
+  margin: 1rem;
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .1);
+}
+
+/* Badge in top-right corner */
+.game-round::before {
+  content: "Round " attr(data-round);
+  position: absolute;
+  top: .35rem;
+  right: 1.5rem;
+  color: #c4c3c3;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/* For fenced code/monospace blocks */
+pre {
+  background: #e0e0e0;
+  border-left: .2rem solid #f36d33;
+  border-radius: .2rem;
+  color: #666;
+  font-family: monospace;
+  line-height: 1.0;
+  margin-top: 0.3rem;
+  margin-bottom: 0.5rem;
+  max-width: 100%;
+  overflow: auto;
+  padding: 0.5rem 0.2rem;
+}/* This CSS is based on a stack overflow answer by Roko C. Buljan in https://stackoverflow.com/a/71155446 */
+
+.msg.player-gm.p1 {
+  border-radius: var(--rad-sm) var(--rad) var(--rad) var(--rad-sm);
+  background: #f39109;
+  color: #fff;
+  margin-right: 40%;
+}
+
+.msg.player-gm.p2 {
+  border-radius: var(--rad) var(--rad-sm) var(--rad-sm) var(--rad);
+  background: #874aaf;
+  color: #fff;
+  margin-left: 40%;
+}
+.msg.player-gm::before {
+  right: 1rem;
+}
+
+.msg.gm-player {
+  background: #c4c3c3;
+  color: #0c0c0c;
+}
+
+.msg.gm-player.p1 {
+  border-radius: var(--rad) var(--rad-sm) var(--rad-sm) var(--rad);
+  margin-right: 20%;
+  margin-left: 10%;
+}
+
+.msg.gm-player.p2 {
+  border-radius: var(--rad-sm) var(--rad) var(--rad) var(--rad-sm);
+  margin-right: 10%;
+  margin-left: 20%;
+}
+
+.msg.player-player.p1 {
+  border-radius: var(--rad-sm) var(--rad-sm) var(--rad-sm) var(--rad-sm);
+  background: #d4edda;
+  color: #155724;
+  margin-right: 40%;
+  font-size: 0.8rem;
+  border-left: 3px solid #28a745;
+}
+
+.msg.player-player.p2 {
+  border-radius: var(--rad-sm) var(--rad-sm) var(--rad-sm) var(--rad-sm);
+  background: #d4edda;
+  color: #155724;
+  margin-left: 40%;
+  font-size: 0.8rem;
+  border-right: 3px solid #28a745;
+}
+
+.msg.gm-gm {
+  border-radius: var(--rad-sm) var(--rad-sm) var(--rad-sm) var(--rad-sm);
+  background: #f1f1f1;
+  color: #373636;
+  margin-left: 20%;
+  margin-right: 20%;
+  font-size: 0.8rem;
+
+}
+
+/* speaker labels */
+
+.msg::before {
+  content: attr(speaker);
+  font-size: 0.8rem;
+  position: absolute;
+  bottom: 100%;
+  color: #888;
+  white-space: nowrap;
+
+}
+
+/* Message info displayed on the right for GM to Player 1 */
+.msg.gm-player.a::before {
+  right: 1rem;
+}
+
+/* All other cases: message info on the left */
+.msg.player-gm.a::before, .msg.gm-player.b::before, .msg.gm-gm::before {
+  left: 1rem;
+}
+    </style>
+</head>
+<body>
+
+<br/>
+
+<div class="top-info">
+    <p>Interaction Transcript for game 'dond', experiment 'semi_en', episode 1 with selfrefine-llama-3.1-8b-instruct.</p>
+</div>
+
+<br/>
+
+<div class="chat">
+<div class="game-round" data-round="0">
+    <div speaker="GM (Game Master) to Player 1 (DealOrNoDealPlayer)" class="msg gm-player p1" style="">
+        <p>You are playing a negotiation game in which you have to agree on how to divide a set of items among you and another player.<br/><br/>Rules:<br/>(a) You and the other player are given a set of items. Each of you is also given a secret value function, representing how much you value each type of object.<br/>(b) You exchange messages with the other player to agree on who gets which items. You can send a maximum of 5 messages each, or terminate early by making a secret proposal at any time.<br/>(c) You are each asked to submit a secret proposal indicating the items you want formatted in square brackets as follows: &quot;[Proposal: &lt;number&gt; &lt;object name&gt;, &lt;number&gt; &lt;object name&gt;, &lt;...&gt;]&quot;<br/>(d) If your proposals are complementary, i.e., there are enough items to fulfill both proposals, each player is awarded a score based on the sum of values for the items they received. Otherwise, both of you get zero points.<br/>(e) Your goal is to maximize the score you receive.<br/><br/>Let us start.<br/><br/>The set of available items is:<br/><br/>1 bell, 1 battery, 1 eraser, 2 towels<br/><br/>Your secret value function is:<br/><br/>bell: 1, battery: 0, eraser: 1, towel: 4<br/><br/>IMPORTANT: Your messages, unless it is the secret proposal, are directly transmitted to the other player, so do not include any response to the rules or text announcing your message. To make a secret proposal, use the indicated format. Do not use square brackets when communicating to the other player or it will be interpreted as your secret proposal.<br/></p>
+    </div>
+
+    <div speaker="Player 1 (DealOrNoDealPlayer) to Player 1 (DealOrNoDealPlayer)" class="msg player-player p1" style="">
+        <p>[DRAFT]<br/>I&#x27;ll start by sending a message to the other player. <br/><br/>I think the towels are the most valuable items in the set, and I&#x27;d like to know if you value them highly as well. Do you have a high value for the towels?</p>
+    </div>
+
+    <div speaker="Player 1 (DealOrNoDealPlayer) to Player 1 (DealOrNoDealPlayer)" class="msg player-player p1" style="">
+        <p>[SELF-FEEDBACK]<br/>FORMAT: ok<br/>RULES: ok<br/>STRATEGY: ok<br/>REASON: The message is a direct question to the other player, gathering information about their value function without revealing any information about your own, which is a good starting move.</p>
+    </div>
+
+    <div speaker="Player 1 (DealOrNoDealPlayer) to GM (Game Master)" class="msg player-gm p1" style="">
+        <p>Do you have a high value for the towels?</p>
+    </div>
+
+    <div speaker="Game Master: valid response" class="msg gm-gm" style="">
+        <p>continue</p>
+    </div>
+
+    <div speaker="Game Master: valid message" class="msg gm-gm" style="">
+        <p>Do you have a high value for the towels?</p>
+    </div>
+
+    <div speaker="GM (Game Master) to Player 2 (DealOrNoDealPlayer)" class="msg gm-player p2" style="">
+        <p>You are playing a negotiation game in which you have to agree on how to divide a set of items among you and another player.<br/><br/>Rules:<br/>(a) You and the other player are given a set of items. Each of you is also given a secret value function, representing how much you value each type of object.<br/>(b) You exchange messages with the other player to agree on who gets which items. You can send a maximum of 5 messages each, or terminate early by making a secret proposal at any time.<br/>(c) You are each asked to submit a secret proposal indicating the items you want formatted in square brackets as follows: &quot;[Proposal: &lt;number&gt; &lt;object name&gt;, &lt;number&gt; &lt;object name&gt;, &lt;...&gt;]&quot;<br/>(d) If your proposals are complementary, i.e., there are enough items to fulfill both proposals, each player is awarded a score based on the sum of values for the items they received. Otherwise, both of you get zero points.<br/>(e) Your goal is to maximize the score you receive.<br/><br/>Let us start.<br/><br/>The set of available items is:<br/><br/>1 bell, 1 battery, 1 eraser, 2 towels<br/><br/>Your secret value function is:<br/><br/>bell: 2, battery: 3, eraser: 1, towel: 2<br/><br/>IMPORTANT: Your messages, unless it is the secret proposal, are directly transmitted to the other player, so do not include any response to the rules or text announcing your message. To make a secret proposal, use the indicated format. Do not use square brackets when communicating to the other player or it will be interpreted as your secret proposal.<br/><br/><br/>Do you have a high value for the towels?</p>
+    </div>
+
+    <div speaker="Player 2 (DealOrNoDealPlayer) to Player 2 (DealOrNoDealPlayer)" class="msg player-player p2" style="">
+        <p>[DRAFT]<br/>I value towels highly, they are worth 2 points each to me.</p>
+    </div>
+
+    <div speaker="Player 2 (DealOrNoDealPlayer) to Player 2 (DealOrNoDealPlayer)" class="msg player-player p2" style="">
+        <p>[SELF-FEEDBACK]<br/>FORMAT: ok<br/>RULES: ok<br/>STRATEGY: ok<br/>REASON: The message is a straightforward statement of your value for towels, which does not reveal any information about your secret value function and does not attempt to negotiate or make a proposal.</p>
+    </div>
+
+    <div speaker="Player 2 (DealOrNoDealPlayer) to GM (Game Master)" class="msg player-gm p2" style="">
+        <p>I value towels highly, they are worth 2 points each to me.</p>
+    </div>
+
+    <div speaker="Game Master: valid response" class="msg gm-gm" style="">
+        <p>continue</p>
+    </div>
+
+    <div speaker="Game Master: valid message" class="msg gm-gm" style="">
+        <p>I value towels highly, they are worth 2 points each to me.</p>
+    </div>
+</div><div class="game-round" data-round="1">
+    <div speaker="GM (Game Master) to Player 1 (DealOrNoDealPlayer)" class="msg gm-player p1" style="">
+        <p>I value towels highly, they are worth 2 points each to me.</p>
+    </div>
+
+    <div speaker="Player 1 (DealOrNoDealPlayer) to Player 1 (DealOrNoDealPlayer)" class="msg player-player p1" style="">
+        <p>[DRAFT]<br/>I&#x27;m glad we have a common interest. Do you think we could split the towels evenly, with 1 towel going to each of us?</p>
+    </div>
+
+    <div speaker="Player 1 (DealOrNoDealPlayer) to Player 1 (DealOrNoDealPlayer)" class="msg player-player p1" style="">
+        <p>[SELF-FEEDBACK]<br/>FORMAT: ok<br/>RULES: ok<br/>STRATEGY: problem<br/>REASON: The message does not directly address the goal of maximizing the score, as it does not provide any information about the player&#x27;s value function or proposal.</p>
+    </div>
+
+    <div speaker="Player 1 (DealOrNoDealPlayer) to GM (Game Master)" class="msg player-gm p1" style="">
+        <p>I value towels at 4 points each, which is higher than your value of 2 points.</p>
+    </div>
+
+    <div speaker="Game Master: valid response" class="msg gm-gm" style="">
+        <p>continue</p>
+    </div>
+
+    <div speaker="Game Master: valid message" class="msg gm-gm" style="">
+        <p>I value towels at 4 points each, which is higher than your value of 2 points.</p>
+    </div>
+
+    <div speaker="GM (Game Master) to Player 2 (DealOrNoDealPlayer)" class="msg gm-player p2" style="">
+        <p>I value towels at 4 points each, which is higher than your value of 2 points.</p>
+    </div>
+
+    <div speaker="Player 2 (DealOrNoDealPlayer) to Player 2 (DealOrNoDealPlayer)" class="msg player-player p2" style="">
+        <p>[DRAFT]<br/>That&#x27;s a significant difference in valuation. I&#x27;m starting to think that we might be able to come to a mutually beneficial agreement if we can find a way to allocate the towels.</p>
+    </div>
+
+    <div speaker="Player 2 (DealOrNoDealPlayer) to Player 2 (DealOrNoDealPlayer)" class="msg player-player p2" style="">
+        <p>[SELF-FEEDBACK]<br/>FORMAT: ok<br/>RULES: ok<br/>STRATEGY: ok<br/>REASON: The message acknowledges the difference in valuation and opens the possibility for a mutually beneficial agreement, which is a reasonable strategy given the game&#x27;s constraints.</p>
+    </div>
+
+    <div speaker="Player 2 (DealOrNoDealPlayer) to GM (Game Master)" class="msg player-gm p2" style="">
+        <p>I think we can find a way to allocate the towels to our mutual benefit.</p>
+    </div>
+
+    <div speaker="Game Master: valid response" class="msg gm-gm" style="">
+        <p>continue</p>
+    </div>
+
+    <div speaker="Game Master: valid message" class="msg gm-gm" style="">
+        <p>I think we can find a way to allocate the towels to our mutual benefit.</p>
+    </div>
+</div><div class="game-round" data-round="2">
+    <div speaker="GM (Game Master) to Player 1 (DealOrNoDealPlayer)" class="msg gm-player p1" style="">
+        <p>I think we can find a way to allocate the towels to our mutual benefit.</p>
+    </div>
+
+    <div speaker="Player 1 (DealOrNoDealPlayer) to Player 1 (DealOrNoDealPlayer)" class="msg player-player p1" style="">
+        <p>[DRAFT]<br/>I&#x27;m open to discussing a possible allocation. Do you think you could give me one towel and keep one for yourself?</p>
+    </div>
+
+    <div speaker="Player 1 (DealOrNoDealPlayer) to Player 1 (DealOrNoDealPlayer)" class="msg player-player p1" style="">
+        <p>[SELF-FEEDBACK]<br/>FORMAT: ok<br/>RULES: ok<br/>STRATEGY: problem<br/>REASON: The move does not take into account the other player&#x27;s high value for towels, which could lead to a suboptimal allocation.</p>
+    </div>
+
+    <div speaker="Player 1 (DealOrNoDealPlayer) to GM (Game Master)" class="msg player-gm p1" style="">
+        <p>I&#x27;m open to discussing a possible allocation. I could give you one towel and keep one for myself, but I&#x27;m not sure if that&#x27;s the best we can do.</p>
+    </div>
+
+    <div speaker="Game Master: valid response" class="msg gm-gm" style="">
+        <p>continue</p>
+    </div>
+
+    <div speaker="Game Master: valid message" class="msg gm-gm" style="">
+        <p>I&#x27;m open to discussing a possible allocation. I could give you one towel and keep one for myself, but I&#x27;m not sure if that&#x27;s the best we can do.</p>
+    </div>
+
+    <div speaker="GM (Game Master) to Player 2 (DealOrNoDealPlayer)" class="msg gm-player p2" style="">
+        <p>I&#x27;m open to discussing a possible allocation. I could give you one towel and keep one for myself, but I&#x27;m not sure if that&#x27;s the best we can do.</p>
+    </div>
+
+    <div speaker="Player 2 (DealOrNoDealPlayer) to Player 2 (DealOrNoDealPlayer)" class="msg player-player p2" style="">
+        <p>[DRAFT]<br/>That&#x27;s a good starting point. I&#x27;m interested in the battery, and I think it&#x27;s worth more to me than the eraser. Would you be willing to give me the battery in exchange for the eraser?</p>
+    </div>
+
+    <div speaker="Player 2 (DealOrNoDealPlayer) to Player 2 (DealOrNoDealPlayer)" class="msg player-player p2" style="">
+        <p>[SELF-FEEDBACK]<br/>FORMAT: ok<br/>RULES: ok<br/>STRATEGY: problem<br/>REASON: The player is willing to give up the eraser, which has a lower value to them, but they could potentially get a better deal by negotiating the value of the battery or the towels.</p>
+    </div>
+
+    <div speaker="Player 2 (DealOrNoDealPlayer) to GM (Game Master)" class="msg player-gm p2" style="">
+        <p>I&#x27;m not sure the battery is worth that much to you, considering it&#x27;s worth 3 points to me. Could you tell me more about why you value it so highly?</p>
+    </div>
+
+    <div speaker="Game Master: valid response" class="msg gm-gm" style="">
+        <p>continue</p>
+    </div>
+
+    <div speaker="Game Master: valid message" class="msg gm-gm" style="">
+        <p>I&#x27;m not sure the battery is worth that much to you, considering it&#x27;s worth 3 points to me. Could you tell me more about why you value it so highly?</p>
+    </div>
+</div><div class="game-round" data-round="3">
+    <div speaker="GM (Game Master) to Player 1 (DealOrNoDealPlayer)" class="msg gm-player p1" style="">
+        <p>I&#x27;m not sure the battery is worth that much to you, considering it&#x27;s worth 3 points to me. Could you tell me more about why you value it so highly?</p>
+    </div>
+
+    <div speaker="Player 1 (DealOrNoDealPlayer) to Player 1 (DealOrNoDealPlayer)" class="msg player-player p1" style="">
+        <p>[DRAFT]<br/>To be honest, I don&#x27;t value the battery very highly, it&#x27;s only worth 0 points to me.</p>
+    </div>
+
+    <div speaker="Player 1 (DealOrNoDealPlayer) to Player 1 (DealOrNoDealPlayer)" class="msg player-player p1" style="">
+        <p>[SELF-FEEDBACK]<br/>FORMAT: ok<br/>RULES: ok<br/>STRATEGY: problem<br/>REASON: Revealing that the battery is worth 0 points to you may give away valuable information to the other player, potentially limiting your negotiation options.</p>
+    </div>
+
+    <div speaker="Player 1 (DealOrNoDealPlayer) to GM (Game Master)" class="msg player-gm p1" style="">
+        <p>I don&#x27;t value the battery very highly, it&#x27;s not a priority for me.</p>
+    </div>
+
+    <div speaker="Game Master: valid response" class="msg gm-gm" style="">
+        <p>continue</p>
+    </div>
+
+    <div speaker="Game Master: valid message" class="msg gm-gm" style="">
+        <p>I don&#x27;t value the battery very highly, it&#x27;s not a priority for me.</p>
+    </div>
+
+    <div speaker="GM (Game Master) to Player 2 (DealOrNoDealPlayer)" class="msg gm-player p2" style="">
+        <p>I don&#x27;t value the battery very highly, it&#x27;s not a priority for me.</p>
+    </div>
+
+    <div speaker="Player 2 (DealOrNoDealPlayer) to Player 2 (DealOrNoDealPlayer)" class="msg player-player p2" style="">
+        <p>[DRAFT]<br/>That&#x27;s good to know. I think we might be able to make a deal that works for both of us.</p>
+    </div>
+
+    <div speaker="Player 2 (DealOrNoDealPlayer) to Player 2 (DealOrNoDealPlayer)" class="msg player-player p2" style="">
+        <p>[SELF-FEEDBACK]<br/>FORMAT: ok<br/>RULES: ok<br/>STRATEGY: ok<br/>REASON: The answer is a neutral, non-committal statement that doesn&#x27;t reveal any information about the player&#x27;s strategy or proposal, which is a good move given the current state of the game.</p>
+    </div>
+
+    <div speaker="Player 2 (DealOrNoDealPlayer) to GM (Game Master)" class="msg player-gm p2" style="">
+        <p>I think we&#x27;re making progress.</p>
+    </div>
+
+    <div speaker="Game Master: valid response" class="msg gm-gm" style="">
+        <p>continue</p>
+    </div>
+
+    <div speaker="Game Master: valid message" class="msg gm-gm" style="">
+        <p>I think we&#x27;re making progress.</p>
+    </div>
+</div><div class="game-round" data-round="4">
+    <div speaker="GM (Game Master) to Player 1 (DealOrNoDealPlayer)" class="msg gm-player p1" style="">
+        <p>I think we&#x27;re making progress.</p>
+    </div>
+
+    <div speaker="Player 1 (DealOrNoDealPlayer) to Player 1 (DealOrNoDealPlayer)" class="msg player-player p1" style="">
+        <p>[DRAFT]<br/>I think we are too. I&#x27;m starting to think that we could make a deal that works for both of us.</p>
+    </div>
+
+    <div speaker="Player 1 (DealOrNoDealPlayer) to Player 1 (DealOrNoDealPlayer)" class="msg player-player p1" style="">
+        <p>[SELF-FEEDBACK]<br/>FORMAT: ok<br/>RULES: ok<br/>STRATEGY: ok<br/>REASON: The message is a neutral, positive statement that doesn&#x27;t reveal any information about the player&#x27;s secret value function or proposal, and doesn&#x27;t attempt to negotiate or make a deal.</p>
+    </div>
+
+    <div speaker="Player 1 (DealOrNoDealPlayer) to GM (Game Master)" class="msg player-gm p1" style="">
+        <p>I&#x27;m glad we&#x27;re making progress.</p>
+    </div>
+
+    <div speaker="Game Master: valid response" class="msg gm-gm" style="">
+        <p>continue</p>
+    </div>
+
+    <div speaker="Game Master: valid message" class="msg gm-gm" style="">
+        <p>I&#x27;m glad we&#x27;re making progress.</p>
+    </div>
+
+    <div speaker="GM (Game Master) to Player 2 (DealOrNoDealPlayer)" class="msg gm-player p2" style="">
+        <p>I&#x27;m glad we&#x27;re making progress.</p>
+    </div>
+
+    <div speaker="Player 2 (DealOrNoDealPlayer) to Player 2 (DealOrNoDealPlayer)" class="msg player-player p2" style="">
+        <p>[DRAFT]<br/>I think we should focus on the towels and the battery. Would you be willing to give me the battery and one towel in exchange for the eraser?</p>
+    </div>
+
+    <div speaker="Player 2 (DealOrNoDealPlayer) to Player 2 (DealOrNoDealPlayer)" class="msg player-player p2" style="">
+        <p>[SELF-FEEDBACK]<br/>FORMAT: ok<br/>RULES: ok<br/>STRATEGY: problem<br/>REASON: The proposal does not take into account the other player&#x27;s high value for towels, which could lead to a suboptimal allocation.</p>
+    </div>
+
+    <div speaker="Player 2 (DealOrNoDealPlayer) to GM (Game Master)" class="msg player-gm p2" style="">
+        <p>I think we should focus on the towels and the battery. Would you be willing to give me the battery and one towel in exchange for the eraser and one towel?</p>
+    </div>
+
+    <div speaker="Game Master: valid response" class="msg gm-gm" style="">
+        <p>continue</p>
+    </div>
+
+    <div speaker="Game Master: valid message" class="msg gm-gm" style="">
+        <p>I think we should focus on the towels and the battery. Would you be willing to give me the battery and one towel in exchange for the eraser and one towel?</p>
+    </div>
+</div><div class="game-round" data-round="5">
+    <div speaker="GM (Game Master) to Player 1 (DealOrNoDealPlayer)" class="msg gm-player p1" style="">
+        <p>I think we should focus on the towels and the battery. Would you be willing to give me the battery and one towel in exchange for the eraser and one towel?<br/><br/><br/>The time is up. It is now your turn to submit a secret proposal.<br/></p>
+    </div>
+
+    <div speaker="Player 1 (DealOrNoDealPlayer) to Player 1 (DealOrNoDealPlayer)" class="msg player-player p1" style="">
+        <p>[DRAFT]<br/>[Proposal: 1 towel, 1 eraser, 1 bell]</p>
+    </div>
+
+    <div speaker="Player 1 (DealOrNoDealPlayer) to Player 1 (DealOrNoDealPlayer)" class="msg player-player p1" style="">
+        <p>[SELF-FEEDBACK]<br/>FORMAT: ok<br/>RULES: ok<br/>STRATEGY: problem<br/>REASON: The proposal does not include the battery, which was a key item in the negotiation and may be more valuable to the other player than the items included in the proposal.</p>
+    </div>
+
+    <div speaker="Player 1 (DealOrNoDealPlayer) to GM (Game Master)" class="msg player-gm p1" style="">
+        <p>[Proposal: 1 towel, 1 eraser, 1 bell, 1 battery]</p>
+    </div>
+
+    <div speaker="Game Master: valid response" class="msg gm-gm" style="">
+        <p>proposal</p>
+    </div>
+
+    <div speaker="Game Master: valid proposal" class="msg gm-gm" style="">
+        <p>[1, 1, 1, 1]</p>
+    </div>
+
+    <div speaker="GM (Game Master) to Player 2 (DealOrNoDealPlayer)" class="msg gm-player p2" style="">
+        <p>The other player has submitted a secret proposal. It is now your turn to submit a proposal of your own.<br/></p>
+    </div>
+
+    <div speaker="Player 2 (DealOrNoDealPlayer) to Player 2 (DealOrNoDealPlayer)" class="msg player-player p2" style="">
+        <p>[DRAFT]<br/>[Proposal: 1 towel, 1 eraser, 1 battery]</p>
+    </div>
+
+    <div speaker="Player 2 (DealOrNoDealPlayer) to Player 2 (DealOrNoDealPlayer)" class="msg player-player p2" style="">
+        <p>[SELF-FEEDBACK]<br/>FORMAT: ok<br/>RULES: ok<br/>STRATEGY: problem<br/>REASON: The proposal does not take into account the other player&#x27;s expressed willingness to give up the battery and one towel, which could have been a better deal.</p>
+    </div>
+
+    <div speaker="Player 2 (DealOrNoDealPlayer) to GM (Game Master)" class="msg player-gm p2" style="">
+        <p>I would like to get the battery and one towel in exchange for the eraser and one towel.</p>
+    </div>
+
+    <div speaker="Game Master: valid response" class="msg gm-gm" style="">
+        <p>continue</p>
+    </div>
+
+    <div speaker="Game Master: error" class="msg gm-gm" style="">
+        <p>player was instructed to make a proposal</p>
+    </div>
+</div>
+</div>
+
+</body>
+</html>

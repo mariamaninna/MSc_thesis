@@ -1,0 +1,39 @@
+{
+  "condition": "selfrefine",
+  "agent": "SelfRefineAgent",
+  "timestamp": "2026-10-17T09:07:20",
+  "model_name": "Qwen3.5-27B",
+  "model_spec": {
+    "model_name": "Qwen3.5-27B",
+    "backend": "huggingface_local",
+    "huggingface_id": "Qwen/Qwen3.5-27B",
+    "parameters": "27B",
+    "release_date": "2026-02-24",
+    "context_size": "262k",
+    "model_config": {
+      "premade_chat_template": true,
+      "eos_to_cull": "<\\|im_end\\|>|<\\|endoftext\\|>",
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      },
+      "multimodality": {
+        "single_image": true,
+        "multiple_images": true,
+        "audio": false,
+        "video": true
+      }
+    }
+  },
+  "gen_args": {
+    "temperature": 0.0,
+    "max_tokens": 600
+  },
+  "torch_dtype": "torch.bfloat16",
+  "cuda_visible_devices": "5",
+  "clembench_home": "/home/users/mmanina/project/mmanina/MSc_thesis/libs/playpen/clembench",
+  "games": [
+    "codenames"
+  ],
+  "feedback_prompt": "You are a gameplay evaluator. Here's the game so far:\n\n{transcript}\n\n\nDo not produce a new answer. Evaluate the following answer draft: \n\n{draft}\n\nJudge these three criteria:\n- FORMAT - does the answer have the required shape: the right tags and markers, with no extra text?\n- RULES - does the answer obey the game's constraints on what may legally be said or played?\n- STRATEGY - given everything known so far, is this a good move?\n\nOutput your scores for the following criteria with exactly four lines, nothing else:\nFORMAT: <write \"ok\" or \"problem\">\nRULES: <write \"ok\" or \"problem\">\nSTRATEGY: <write \"ok\" or \"problem\">\nREASON: <one sentence>\n\n\nExamples of this judgement in other games:\n\nExample 1\nRequired form: a command starting with \"> \", for example \"> go north\".\nAnswer: \"I will open the cupboard to look for the key.\"\nFORMAT: problem\nRULES: ok\nSTRATEGY: ok\nREASON: The answer is prose and does not start with the required \"> \" command marker.\n\nExample 2\nRequired form: \"CLUE: <word>\" and \"TARGETS: <words>\". Rule: the clue must not be one of the board words or contain part of one. Board words include \"flock\".\nAnswer: \"CLUE: flocking\nTARGETS: bird, sheep\"\nFORMAT: ok\nRULES: problem\nSTRATEGY: ok\nREASON: The clue \"flocking\" contains the board word \"flock\", which is not allowed.\n\nExample 3\nRequired form: \"GO: DIRECTION\". The rooms to the north and east have already been visited; the room to the south has not.\nAnswer: \"GO: north\"\nFORMAT: ok\nRULES: ok\nSTRATEGY: problem\nREASON: Moving north revisits a known room instead of exploring the unvisited room to the south.\n\nExample 4\nRequired form: questions from the game master start with \"ME:\" and must be answered with \"ASIDE: <one sentence>\".\nAnswer: \"ASIDE: no\"\nFORMAT: ok\nRULES: ok\nSTRATEGY: ok\nREASON: The answer uses the required ASIDE tag and gives the short yes/no reply the question asked for.\n\nNow output your evaluation in the required format.",
+  "refinement_prompt": "Here's the game so far:\n\n{transcript}\n\nThis is the next planned game move: \n\n{draft} \n\nPlease refine this move based on the following feedback, so that it follows the game rules and is a good move:\n\n{feedback}\n\nProvide your response in the format specified in game rules above, and nothing else. Do not refer to the feedback or to this instruction in your answer.\n\nIf you think the next planned game move does not need any refinement, output it unchanged."
+}

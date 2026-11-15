@@ -56,6 +56,7 @@ CAUSES = ["turn_limit_reached", "invalid_format",
       "metadata", "turns_limit"]
 STATIC = ["bbh", "cladder", "ifeval", "mmlu_pro", "eqbench"]
 GENERIC = {"abort game", "game_result = abort", "continue", "end game"}
+MODEL_ORDER = ["Qwen3.5-4B", "Qwen3.5-9B", "Qwen3.5-27B", "Llama-3.1-8B-Instruct"]
 
 
 # === GATHERING GAME OUTCOMES ===
@@ -84,11 +85,11 @@ def count_instances(root_dir):
 
 
 # Uncomment this block to rewrite instance_counts.csv
-#   with open(r"C:\Users\white\Desktop\MSc_thesis\baseline_analysis\instance_counts.csv", "w", newline="", encoding="utf-8") as f:
-#      w = csv.writer(f)
-#      w.writerow(["model", "n_instances"])
-#      for model, n in instance_counts.items():
-#          w.writerow([model, n])
+  with open(r"C:\Users\white\Desktop\MSc_thesis\baseline_analysis\instance_counts.csv", "w", newline="", encoding="utf-8") as f:
+     w = csv.writer(f)
+     w.writerow(["model", "n_instances"])
+     for model, n in instance_counts.items():
+         w.writerow([model, n])
 
 
 def collect_aborts(root_dir):
@@ -171,7 +172,9 @@ def plot_outcomes(df, title, out_stem):
         OUTCOME_COLORS = {"Success": "#60d169", "Lose": "#74787f", "Aborted": "#c14f4d"}
         ORDER = ["Success", "Lose", "Aborted"]
 
-        ct = pd.crosstab(df.model, df.outcome).reindex(columns=ORDER, fill_value=0)
+        rows = [m for m in MODEL_ORDER if m in set(df.model)]
+        ct = (pd.crosstab(df.model, df.outcome)
+                  .reindex(index=rows[::-1], columns=ORDER, fill_value=0))
         pct = ct.div(ct.sum(axis=1), axis=0) * 100
 
         fig, ax = plt.subplots(figsize=(8, 2.6))
@@ -223,7 +226,7 @@ def plot_causes_by_game_model(df_aborts, df_outcomes, out_path):
       "reference":         ["referencegame", "imagegame", "matchit_ascii"],
       "navigation":        ["adventuregame", "textmapworld", "textmapworld_graphreasoning",
                             "textmapworld_specificroom"],
-      "dialogue / social": ["codenames", "dond", "guesswhat", "privateshared"],
+      "dialogue / social": ["codenames", "dond", "guesswhat"],
   }
         d = df_aborts.copy()
 
@@ -232,10 +235,27 @@ def plot_causes_by_game_model(df_aborts, df_outcomes, out_path):
         # the reasons why the game aborted a bit differently
         d["category"] = ["format" if r in FORMAT else "unclassified" if r == "(not logged)" else "rule" for r in d["reason"]]
 
+        total = len(d)
+        print("Total aborted episodes:", total)
+        for category in ("rule", "format", "unclassified"):
+          n = len(d[d.category == category])
+          share = round(100 * n / total, 1)
+          print(f" {category}: {n} ({share}%)")
+
+        
+          subset = d[d.category == category]
+          print()
+          counts = {}
+          for reason in subset.reason:
+              counts[reason] = counts.get(reason, 0) + 1
+          for reason in sorted(counts, key=lambda r: -counts[r]):
+              games = sorted(set(subset[subset.reason == reason].game))
+              print(f"   {counts[reason]}  {reason}  [{', '.join(games)}]")
+
         all_games = sorted(df_outcomes.game.unique())
         pooled = pd.crosstab(d.game, d.category).reindex(all_games, fill_value=0)
         order = [g for grp in GAME_GROUPS.values() for g in grp][::-1]
-        models = sorted(d.model.unique())
+        models = [m for m in MODEL_ORDER if m in set(d.model)]
         xmax   = pd.crosstab([d.model, d.game], d.category).sum(axis=1).max() * 1.15
 
         fig, axes = plt.subplots(1, len(models), figsize=(10, 5), sharey=True)
